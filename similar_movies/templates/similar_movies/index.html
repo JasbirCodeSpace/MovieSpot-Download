@@ -1,53 +1,40 @@
+{% extends 'similar_movies/base.html' %}
 {% load static %}
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{% static 'similar_movies/image/logo.ico' %}" type="image/x-icon">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/style.css' %}">
+{% block content %}
+    <div class="hero-wrap js-fullheight">
+      <div class="overlay"></div>
+      <div class="container-fluid px-0">
+      	<div class="row d-md-flex no-gutters slider-text align-items-center js-fullheight justify-content-end">
+	      	<img class="one-third js-fullheight align-self-end order-md-last img-fluid" src="" alt="">
+	        <div class="one-forth d-flex align-items-center ftco-animate js-fullheight">
+	        	<div class="text mt-5">
+	            <h1 class="mb-3"><span>Welcome to</span> <span>MovieSpot</span></h1>
+	            <p>Start living at the Center of Entertainment 'cause Entertainment is whats needed.</p>
+	            <p><a href="#" class="btn btn-primary px-4 py-3">Get in touch</a></p>
+	          </div>
+	        </div>
+	    	</div>
+      </div>
+    </div>
 
-    <title>MovieSpot | Home</title>
-  </head>
-  <body>
-    <nav class="nav">
-        <div class="container">
-            <div class="logo">
-                <a href="#">
-                  <img src="{% static 'similar_movies/image/logo.png'%}" id="logo">
-                </a>
-            </div>
-            <div id="mainListDiv" class="main_list">
-                <ul class="navlinks">
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Portfolio</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <span class="navTrigger">
-                <i></i>
-                <i></i>
-                <i></i>
-            </span>
-        </div>
-    </nav>
-
-    <section class="home" style="background-image: url({% static 'similar_movies/image/background.jpg' %});">
+        <section class="search-section">
+    	<div class="container">
+    		<div class="row d-flex align-items-center">
+    			<div class="col-lg-5 heading-white mb-4 mb-sm-4 mb-lg-0 ftco-animate">
+    				<h2>Search Your Movie Here</h2>
+    			</div>
+    			<div class="col-lg-7 col-sm-12 col-md-12 p-5 ftco-wrap ftco-animate">
+    				<form action="#" class="domain-form d-flex mb-3">
+              <div class="form-group domain-name">
+                <input type="text" class="form-control name px-4" placeholder="Enter your movie name...">
+              </div>
+              <div class="form-group domain-select d-flex">
+                <input type="submit" class="search-domain btn btn-primary text-center" value="Search">
+	            </div>
+            </form>
+    			</div>
+    		</div>
+    	</div>
     </section>
-    <section class="trending-movies">
-      
-    </section>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script src="{% static 'similar_movies/js/script.js' %}"></script>
-  </body>
-</html>
+{% endblock content %}
