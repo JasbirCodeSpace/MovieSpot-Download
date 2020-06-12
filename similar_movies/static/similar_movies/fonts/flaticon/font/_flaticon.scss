@@ -1,0 +1,54 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 07/05/2019 06:52
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-server:before { content: "\f100"; }
+.flaticon-cloud:before { content: "\f101"; }
+.flaticon-cloud-computing:before { content: "\f102"; }
+.flaticon-settings:before { content: "\f103"; }
+.flaticon-database:before { content: "\f104"; }
+.flaticon-life-insurance:before { content: "\f105"; }
+.flaticon-customer-service:before { content: "\f106"; }
+    
+    $font-Flaticon-server: "\f100";
+    $font-Flaticon-cloud: "\f101";
+    $font-Flaticon-cloud-computing: "\f102";
+    $font-Flaticon-settings: "\f103";
+    $font-Flaticon-database: "\f104";
+    $font-Flaticon-life-insurance: "\f105";
+    $font-Flaticon-customer-service: "\f106";
