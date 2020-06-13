@@ -2,10 +2,44 @@ $(document).ready(function(){
 
 	const form = document.getElementById('search-form')
 	const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+	let genre = {}
+
+	const getGenre = ()=>{
+		$.ajax({
+			type:'GET',
+			url:'/get-genre',
+			headers:{
+				"X-CSRFToken":csrftoken
+			},
+			success:function(data){
+				genre = data.genres
+				let mappedGenre = {};
+
+				for (var i = 0, l = genre.length; i < l; i++) {
+				    mappedGenre[genre[i].id] = genre[i];
+				}
+				genre = mappedGenre
+			},
+			error:function(error){
+				console.log(error)
+			}
+
+		})
+	}
+	const genreIdToName = (genrelist)=>{
+		let genreString = ''
+		for (var i = 0; i < genrelist.length; i++) {
+			genreString += genre[genrelist[i]].name
+			if (i<genrelist.length-1) {genreString += ' , '}
+		}
+		return genreString
+	}
+	getGenre()
 
 	form.addEventListener('submit',(event)=>{
 		event.preventDefault()
 		let movieName = document.getElementById('movie-name').value
+
 		$.ajax({
 			type:'POST',
 			url: form.getAttribute('data-url'),
@@ -22,6 +56,7 @@ $(document).ready(function(){
 				moviesContainer.innerHTML = ''
 				for (var i = 0; i < movies.length; i++) {
 					if(movies[i].poster_path && movies[i].release_date && movies[i].overview){
+					console.log(movies[i])
 					let htmlData = `<div class="movie_card" id='${ movies[i].id }'>
 					<div class="info_section">
 					<div class="movie_header">
@@ -29,7 +64,7 @@ $(document).ready(function(){
 					<h2> ${movies[i].original_title} </h2>
 					<h4> ${movies[i].release_date.substring(0,4)} </h4>
 					<span class="minutes">117 min</span>
-            		<p class="type">Action, Crime, Fantasy</p>
+            		<p class="type">${genreIdToName(movies[i].genre_ids)}</p>
             		</div>
           			<div class="movie_desc">
           			<p class="text">
