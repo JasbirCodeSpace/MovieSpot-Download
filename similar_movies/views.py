@@ -9,6 +9,8 @@ tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
 
 def home(request):
 	return render(request,'similar_movies/index.html')
+def browse_movie(request):
+	return render(request,'similar_movies/browse.html')
 
 def get_genre(request):
 	response = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +  tmdb.API_KEY + '&language=en-US')

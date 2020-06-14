@@ -44,7 +44,8 @@ html {
   font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
+  scroll-behavior: smooth;}
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block; }
@@ -8359,7 +8360,7 @@ h1, h2, h3, h4, h5,
     height: 750px;
     z-index: 0;
     overflow: hidden; }
-    @media (max-width: 991.98px) {
+       @media (max-width: 991.98px) {
       .hero-wrap .slider-text {
         text-align: center;
         height: 750px; } }
@@ -9471,7 +9472,7 @@ textarea.form-control {
 .block-17 form .fields {
   width: 100%;
   position: relative; }
-  @media (max-width: 991.98px) {
+@media (max-width: 991.98px) {
     .block-17 form .fields {
       width: 100%; } }
   .block-17 form .fields .one-third {
@@ -10034,6 +10035,10 @@ textarea.form-control {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
 
+  #browse-search{
+    padding: 5em 0;
+    background: #6927ff;
+  }
 /* logo */
   /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
@@ -10041,13 +10046,20 @@ textarea.form-control {
     width: 20vw !important;
     height: auto !important;
   }
+  .section{
+    margin-top: 15vh;
+    margin-bottom: 20vh;
+  }
 }
-
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
   .logo{
     width: 30vw !important;
     height: auto !important;
+  }
+  .section{
+    margin-top: 25vh;
+    margin-bottom: 20vh;
   }
 }
 
@@ -10057,6 +10069,9 @@ textarea.form-control {
     width: 20vw !important;
     height: auto !important;
   }
+  .section{
+    margin-top: 18vh;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
@@ -10065,6 +10080,13 @@ textarea.form-control {
     width: 15vw !important;
     height: auto !important;
   }
+  .section{
+    margin-top: 30vh;
+    margin-bottom: 30vh;
+  }
+  #browse-search{
+    margin-top: 18vh !important;
+  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
@@ -10072,6 +10094,13 @@ textarea.form-control {
   .logo{
     width: 10vw !important;
     height: auto !important;
+  }
+  .section{
+    margin-top: 30vh;
+    margin-bottom: 30vh;
+  }
+  #browse-search{
+    margin-top: 18vh !important;
   }
 }
 @import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800");
@@ -10238,4 +10267,9 @@ html, body {
     background: linear-gradient(to top, #e5e6e6 50%, transparent 100%);
     display: inline-grid;
   }
+}
+
+
+.browse-search-label{
+  color: #fff;
 }
