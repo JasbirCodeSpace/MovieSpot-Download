@@ -1,0 +1,183 @@
+{% extends 'similar_movies/base.html' %}
+{% load static %}
+{% block content %}
+<section class="img browse-section" id="browse-search">
+	<div class="container">
+		<div class="row justify-content-center mb-5">
+			<div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
+				<span class="subheading">Browse</span>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-10">
+				<div class="row">
+					<form class="needs-validation" novalidate>
+						<div class="form-row">
+							<div class="col-s2 col-md-12 col-lg-12 col-xl-12 mt-3 mb-3">
+								<label class="browse-search-label" for="movie-name">Search Term</label>
+								<input type="text" class="form-control" id="movie-name" name="movie-name" required>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2">
+								<label class="browse-search-label" for="movie-quality">Quality</label>
+								<select class="custom-select custom-select-sm" name="movie-quality" id="movie-quality">
+									<option value="all" selected>All</option>
+									<option value="720p">720p</option>
+									<option value="1080p">1080p</option>
+									<option value="2160p">2160p</option>
+									<option value="3D">3D</option>
+								</select>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2 ">
+								<label class="browse-search-label" for="movie-genre">Genre</label>
+								<select class="custom-select custom-select-sm" name="movie-genre" id="movie-genre">
+									<option value="all" selected>All</option>
+									<option value="action">Action</option>
+									<option value="adventure">Adventure</option>
+									<option value="animation">Animation</option>
+									<option value="biography">Biography</option>
+									<option value="comedy">Comedy</option>
+									<option value="crime">Crime</option>
+									<option value="documentary">Documentary</option>
+									<option value="drama">Drama</option>
+									<option value="family">Family</option>
+									<option value="fantasy">Fantasy</option>
+									<option value="film-noir">Film-Noir</option>
+									<option value="game-show">Game-Show</option>
+									<option value="history">History</option>
+									<option value="horror">Horror</option>
+									<option value="music">Music</option>
+									<option value="musical">Musical</option>
+									<option value="mystery">Mystery</option>
+									<option value="news">News</option>
+									<option value="reality-tv">Reality-TV</option>
+									<option value="romance">Romance</option>
+									<option value="sci-fi">Sci-Fi</option>
+									<option value="sport">Sport</option>
+									<option value="talk-show">Talk-Show</option>
+									<option value="thriller">Thriller</option>
+									<option value="war">War</option>
+									<option value="western">Western</option>
+								</select>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2">
+								<label class="browse-search-label" for="movie-rating">Rating</label>
+								<select class="custom-select custom-select-sm" name="movie-rating" id="movie-rating">
+									<option value="0" selected>All</option>
+									<option value="9">9+</option>
+									<option value="8">8+</option>
+									<option value="7">7+</option>
+									<option value="6">6+</option>
+									<option value="5">5+</option>
+									<option value="4">4+</option>
+									<option value="3">3+</option>
+									<option value="2">2+</option>
+									<option value="1">1+</option>
+								</select>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2 ">
+								<label class="browse-search-label" for="movie-year">Year</label>
+								<select class="custom-select custom-select-sm" name="movie-year" id="movie-year">
+									<option value="0" selected>All</option>
+									<option value="2020">2020</option>
+									<option value="2019">2019</option>
+									<option value="2015-2018">2015-2018</option>
+									<option value="2010-2014">2010-2014</option>
+									<option value="2000-2009">2000-2009</option>
+									<option value="1990-1999">1990-1999</option>
+									<option value="1980-1989">1980-1989</option>
+									<option value="1970-1979">1970-1979</option>
+									<option value="1900-1969">1900-1969</option>
+								</select>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2 ">
+								<label class="browse-search-label" for="movie-language">Language</label>
+								<select class="custom-select custom-select-sm" name="movie-language" id="movie-language">
+									<option value="all" selected>All</option>
+									<option value="en">English</option>
+									<option value="foreign">Foreign</option>
+									<option value="ja">Japanese (531)</option>
+									<option value="fr">French (439)</option>
+									<option value="de">German (255)</option>
+									<option value="it">Italian (236)</option>
+									<option value="zh">Chinese (217)</option>
+									<option value="es">Spanish (204)</option>
+									<option value="cn">Cantonese (178)</option>
+									<option value="ko">Korean (173)</option>
+									<option value="hi">Hindi (106)</option>
+									<option value="sv">Swedish (89)</option>
+									<option value="ru">Russian (77)</option>
+									<option value="pl">Polish (66)</option>
+									<option value="pt">Portuguese (52)</option>
+									<option value="da">Danish (42)</option>
+									<option value="nl">Dutch (32)</option>
+									<option value="no">Norwegian (32)</option>
+									<option value="fi">Finnish (28)</option>
+									<option value="cs">Czech (26)</option>
+									<option value="tr">Turkish (25)</option>
+									<option value="el">Greek (18)</option>
+									<option value="fa">Persian (17)</option>
+									<option value="th">Thai (15)</option>
+									<option value="id">Indonesian (14)</option>
+									<option value="ar">Arabic (14)</option>
+									<option value="hu">Hungarian (11)</option>
+									<option value="he">Hebrew (11)</option>
+									<option value="tl">Tagalog (9)</option>
+									<option value="te">Telugu (7)</option>
+									<option value="is">Icelandic (6)</option>
+									<option value="ro">Romanian (6)</option>
+									<option value="ta">Tamil (5)</option>
+									<option value="uk">Ukrainian (4)</option>
+									<option value="bn">Bangla (4)</option>
+									<option value="et">Estonian (4)</option>
+									<option value="sr">Serbian (4)</option>
+									<option value="vi">Vietnamese (3)</option>
+									<option value="ur">Urdu (3)</option>
+									<option value="ms">Malay (3)</option>
+									<option value="eu">Basque (3)</option>
+									<option value="ca">Catalan (3)</option>
+									<option value="xx">xx (2)</option>
+									<option value="af">Afrikaans (2)</option>
+									<option value="la">Latin (2)</option>
+									<option value="ab">Abkhazian (1)</option>
+									<option value="aa">Afar (1)</option>
+									<option value="yi">Yiddish (1)</option>
+									<option value="mi">Maori (1)</option>
+									<option value="sw">Swahili (1)</option>
+									<option value="sk">Slovak (1)</option>
+									<option value="os">Ossetic (1)</option>
+									<option value="nb">Norwegian Bokmål (1)</option>
+									<option value="mr">Marathi (1)</option>
+									<option value="mn">Mongolian (1)</option>
+									<option value="mk">Macedonian (1)</option>
+									<option value="lv">Latvian (1)</option>
+									<option value="km">Khmer (1)</option>
+									<option value="ga">Irish (1)</option>
+									<option value="bs">Bosnian (1)</option>
+								</select>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 mt-2 ">
+								<label class="browse-search-label" for="movie-order">Order By</label>
+								<select class="custom-select custom-select-sm" name="movie-order" id="movie-order">
+									<option value="latest" selected>Latest</option>
+									<option value="oldest">Oldest</option>
+									<option value="featured">Featured</option>
+									<option value="seeds">Seeds</option>
+									<option value="peers">Peers</option>
+									<option value="year">Year</option>
+									<option value="rating">Rating</option>
+									<option value="likes">Likes</option>
+									<option value="alphabetical">Alphabetical</option>
+									<option value="downloads">Downloads</option>
+								</select>
+							</div>
+							<div class="col-md-12 m-3 text-center">
+								<button class="btn btn-primary btn-lg" type="submit" style="color:#6927ff;background:#fff;">Search</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock content %}
