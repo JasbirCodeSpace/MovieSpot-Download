@@ -45,4 +45,10 @@
         
       </div>
     </section>
+
 {% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static 'similar_movies/js/index.js' %}"></script>
+{% endblock javascript%}

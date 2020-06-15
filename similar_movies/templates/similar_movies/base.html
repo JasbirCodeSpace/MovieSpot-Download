@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="{% static 'similar_movies/image/logo.ico' %}">
     <title>MovieSpot | Home</title>
-
+    {% block css %}
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,,500,600,700" rel="stylesheet">
     <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
     <link rel="stylesheet" href="{% static 'similar_movies/css/open-iconic-bootstrap.min.css' %}">
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{% static 'similar_movies/css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'similar_movies/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'similar_movies/css/style.css' %}">
-
+    {% endblock css %}
   </head>
   <body data-spy = 'scroll'>
     {% include 'similar_movies/navbar.html' %}
@@ -31,6 +31,7 @@
     {% endblock content %}
 
 
+  {% block javascript %}
   <script src="{% static 'similar_movies/js/jquery.min.js' %}"></script>
   <script src="{% static 'similar_movies/js/jquery-migrate-3.0.1.min.js' %}"></script>
   <script src="{% static 'similar_movies/js/popper.min.js' %}"></script>
@@ -45,6 +46,6 @@
   <script src="{% static 'similar_movies/js/bootstrap-datepicker.js' %}"></script>
   <script src="{% static 'similar_movies/js/scrollax.min.js' %}"></script>
   <script src="{% static 'similar_movies/js/main.js' %}"></script>
-  <script src="{% static 'similar_movies/js/script.js' %}"></script>
+  {% endblock javascript %}
   </body>
 </html>
