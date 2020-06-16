@@ -25,7 +25,7 @@ $(document).ready(function () {
 							<div class="container">
 								<div class="cards">`
 					for (var i = 0; i < movies.length; i++) {
-						movie_container += `<div class="card">
+						movie_container += `<div class="card" id="${movies[i].id}-${movies[i].imdb_code}">
 			<div class="card__media">
 				<img src="${movies[i].medium_cover_image}" class="responsive-img movie-card-image">
 			</div>
@@ -44,11 +44,28 @@ $(document).ready(function () {
 					let movie_section = document.getElementById('browse-movie-section')
 					movie_section.innerHTML = ``
 					movie_section.insertAdjacentHTML('beforeend', movie_container)
+
 				}
 			},
 			error: function (error) {
 				console.log(error)
+			},
+			complete:function(data){
+				let movie_cards = document.getElementsByClassName('card')
+				for (var i = 0; i < movie_cards.length; i++) {
+					movie_cards[i].addEventListener('click',e=>{
+						redirect_to_movie(e.currentTarget)
+					})
+				}	
 			}
 		})
 	})
+
+	const redirect_to_movie = (target)=>{
+		let ids = target.id.split('-')
+		let url = document.getElementById('browse-movie-section').getAttribute('data-url')
+		url = url.replace('imdb_id',ids[1])
+		url = url.replace('id',ids[0])
+		window.location = url
+	}
 })
