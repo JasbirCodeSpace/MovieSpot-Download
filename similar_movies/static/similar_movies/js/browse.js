@@ -21,12 +21,13 @@ $(document).ready(function () {
 					let movies = result.data.data.movies
 					console.log(movies)
 					let movie_container = `
+					<div class="text-center"><h2 class="purple-heading">${movies.length} Movies found</h2></div>
 							<div class="container">
 								<div class="cards">`
 					for (var i = 0; i < movies.length; i++) {
 						movie_container += `<div class="card">
 			<div class="card__media">
-				<img src="${movies[i].medium_cover_image}" class="responsive-img">
+				<img src="${movies[i].medium_cover_image}" class="responsive-img movie-card-image">
 			</div>
 			<div class="card__header">
 				<h6 class="card__header-title">${movies[i].title}</h6>

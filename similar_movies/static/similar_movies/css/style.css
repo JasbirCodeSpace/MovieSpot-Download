@@ -10039,6 +10039,9 @@ textarea.form-control {
     padding: 5em 0;
     background: #6927ff;
   }
+  #movie-description{
+    padding: 5em 0;
+  }
 /* logo */
   /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
@@ -10084,7 +10087,7 @@ textarea.form-control {
     margin-top: 30vh;
     margin-bottom: 30vh;
   }
-  #browse-search{
+  #browse-search,#movie-description{
     margin-top: 18vh !important;
   }
 }
@@ -10099,7 +10102,7 @@ textarea.form-control {
     margin-top: 30vh;
     margin-bottom: 30vh;
   }
-  #browse-search{
+  #browse-search,#movie-description{
     margin-top: 18vh !important;
   }
 }

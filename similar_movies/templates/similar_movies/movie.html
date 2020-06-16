@@ -1,0 +1,27 @@
+{% extends 'similar_movies/base.html' %}
+{% load static %}
+
+{% block css %}
+	{{ block.super }}
+{% endblock css %}
+
+{% block content %}
+<section id="movie-description">
+	<div class="container">
+		{{data}}
+		<div class="row">
+		  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+		  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+		</div>
+	</div>
+	
+</section>
+
+<section id="movie-similar">
+	
+</section>
+{% endblock content %}
+
+{% block javascript %}
+	{{	block.super }}
+{% endblock javascript %}

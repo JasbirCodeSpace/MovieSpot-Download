@@ -125,3 +125,11 @@
   -webkit-transform: translateX(0);
           transform: translateX(0);
 }
+
+.movie-card-image{
+  width: 100% !important;
+  height: auto !important;
+}
+.purple-heading{
+  color: #6927ff !important;
+}
