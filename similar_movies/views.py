@@ -49,3 +49,16 @@ def search_movie(request):
 			return JsonResponse({'error':"Error while fetching movie"},safe=False)
 	else:
 		return JsonResponse({'error':'Only POST requests allowed'},safe=False)
+
+def movie(request,movie_id):
+	try:
+		required_dict = {'api_key':tmdb.API_KEY,'external_source':'imdb_id'}
+		if len(movie_id) == 9:
+			new_movie_id = movie_id[2:]
+		else:
+			new_movie_id = movie_id[2:]
+		response = requests.get(f'https://api.themoviedb.org/3/find/{movie_id}',params=required_dict)
+# https://image.tmdb.org/t/p/original/lz1qjw1wDbE2Kj76iTXpGKQSPKD.jpg
+		return render(request,'similar_movies/movie.html',{'status':True,'data':response.json()})
+	except :
+		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
