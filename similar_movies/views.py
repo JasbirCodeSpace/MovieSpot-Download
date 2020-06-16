@@ -50,15 +50,25 @@ def search_movie(request):
 	else:
 		return JsonResponse({'error':'Only POST requests allowed'},safe=False)
 
-def movie(request,movie_id):
+def movie(request,yts_id,imdb_id):
 	try:
 		required_dict = {'api_key':tmdb.API_KEY,'external_source':'imdb_id'}
-		if len(movie_id) == 9:
-			new_movie_id = movie_id[2:]
+		if len(imdb_id) == 9:
+			new_movie_id = imdb_id[2:]
 		else:
-			new_movie_id = movie_id[2:]
-		response = requests.get(f'https://api.themoviedb.org/3/find/{movie_id}',params=required_dict)
+			new_movie_id = imdb_id
+		response = requests.get(f'https://api.themoviedb.org/3/find/{imdb_id}',params=required_dict)
 # https://image.tmdb.org/t/p/original/lz1qjw1wDbE2Kj76iTXpGKQSPKD.jpg
-		return render(request,'similar_movies/movie.html',{'status':True,'data':response.json()})
+		json_response = response.json()['movie_results'][0]
+
+		movie_data = {}
+		movie_data['movie_name'] = json_response['title']
+		movie_data['movie_poster'] = 'https://image.tmdb.org/t/p/original/'+json_response['poster_path']
+		movie_data['rating'] = json_response['vote_average']
+		movie_data['language'] = json_response['original_language']
+		movie_data['release_date'] = json_response['release_date']
+		movie_data['overview'] = json_response['overview']
+		
+		return render(request,'similar_movies/movie.html',{'status':True,'data':movie_data})
 	except :
 		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
