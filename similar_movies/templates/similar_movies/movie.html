@@ -6,30 +6,63 @@
 <link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/movie.css' %}">
 {% endblock css %}
 {% block content %}
+{% if status %}
 <section id="movie-description">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 				<div class="card">
 					<div class="card__media">
-						<img src="{{data.movie_poster}}" class="responsive-img movie-card-image">
+						<img src="{{data.movie_image}}" class="responsive-img movie-card-image">
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
-				<h1 class="font-weight-500">{{data.movie_name}}</h1>
-				<h3>{{data.release_date}}</h3>
-				<h2>{{data.genre}}</h2>
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-8 col-xl-8">
+				<h1 class="font-weight-500">{{data.title}}</h1>
+				<h3>{{data.year}}</h3>
+				<h3>{{data.genres}}</h3>
 				<div>
-				<img class='icon' src="{% static 'similar_movies/image/star.svg' %}">
-				<span style="font: bold;">{{data.rating}}</span>
+					<img class='icon' src="{% static 'similar_movies/image/star.svg' %}">
+					<span style="font-size:20px;">{{data.rating}}</span>
 				</div>
+				{% if data.torrents %}
+					<p class="hidden-xs hidden-sm">
+					<em class="pull-left">Available in: &nbsp;</em>
+					{% for torrent in data.torrents %}
+					<a href="{{torrent.url}}" rel="nofollow" title="Download Stick It 720p Torrent">{{torrent.quality}}</a>
+					{% endfor %}
+					</p>
+				{% endif %}
 			</div>
 		</div>
 	</div>
 </section>
-<section id="movie-similar">
+<section id="movie-description">
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+			<h3>Plot</h3>
+			<p>
+				{{data.description_intro}}
+			</p>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+			<h3>Cast</h3>
+			<div class="cast">
+				{{data.cast.length}}
+				{% for cast in data.cast %}
+					<div>
+						<img src="{{ cast.url_small_image}}">
+						<h6>{{cast.name}}</h6>
+						<h6>{{cast.character_name}}</h6>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
 </section>
+{% endif %}
 {% endblock content %}
 {% block javascript %}
 {{	block.super }}
