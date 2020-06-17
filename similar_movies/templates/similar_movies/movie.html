@@ -3,6 +3,7 @@
 {% block css %}
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/movie-cards.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/movie.css' %}">
 {% endblock css %}
 {% block content %}
 <section id="movie-description">
@@ -16,8 +17,13 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
-				<h3 >{{data.movie_name}}</h3>
-				<h6>{{data.release_date}}</h6>
+				<h1 class="font-weight-500">{{data.movie_name}}</h1>
+				<h3>{{data.release_date}}</h3>
+				<h2>{{data.genre}}</h2>
+				<div>
+				<img class='icon' src="{% static 'similar_movies/image/star.svg' %}">
+				<span style="font: bold;">{{data.rating}}</span>
+				</div>
 			</div>
 		</div>
 	</div>

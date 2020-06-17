@@ -33,10 +33,14 @@ def browse_movie_form(request):
 
 	return JsonResponse({'status':False,'error':'Invalid Request'},safe=False)
 
-	
-def get_genre(request):
+def genre():
 	response = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +  tmdb.API_KEY + '&language=en-US')
-	return JsonResponse(response.json(),safe=False)
+	return response.json()
+
+def get_genre(request):
+	genre_json = genre()
+	return JsonResponse(genre_json,safe=False)
+
 def search_movie(request):
 	if request.method == 'POST':
 		try:
@@ -58,7 +62,6 @@ def movie(request,yts_id,imdb_id):
 		else:
 			new_movie_id = imdb_id
 		response = requests.get(f'https://api.themoviedb.org/3/find/{imdb_id}',params=required_dict)
-# https://image.tmdb.org/t/p/original/lz1qjw1wDbE2Kj76iTXpGKQSPKD.jpg
 		json_response = response.json()['movie_results'][0]
 
 		movie_data = {}
@@ -67,8 +70,24 @@ def movie(request,yts_id,imdb_id):
 		movie_data['rating'] = json_response['vote_average']
 		movie_data['language'] = json_response['original_language']
 		movie_data['release_date'] = json_response['release_date']
+
+		if movie_data['release_date']!='' and movie_data['release_date'].find('-')!=-1:
+			movie_data['release_date'] = movie_data['release_date'].split('-')[0]
+
 		movie_data['overview'] = json_response['overview']
-		
+
+		# genre mapping 
+		genre_json = genre()['genres']
+		genre_mapping = {}
+		movie_data['genre'] = []
+		for x in genre_json:
+			genre_mapping[x['id']] = x['name']
+
+		for genre_id in json_response['genre_ids']:
+			movie_data['genre'].append(genre_mapping[genre_id])
+		movie_data['genre'] = ' / '.join(movie_data['genre'])
+		# end of genre mapping 
+
 		return render(request,'similar_movies/movie.html',{'status':True,'data':movie_data})
 	except :
 		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
