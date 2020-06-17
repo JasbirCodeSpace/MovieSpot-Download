@@ -54,7 +54,7 @@ def search_movie(request):
 	else:
 		return JsonResponse({'error':'Only POST requests allowed'},safe=False)
 
-def movie(request,yts_id,imdb_id):
+def tmdb_movie(imdb_id):
 	try:
 		required_dict = {'api_key':tmdb.API_KEY,'external_source':'imdb_id'}
 		if len(imdb_id) == 9:
@@ -88,6 +88,31 @@ def movie(request,yts_id,imdb_id):
 		movie_data['genre'] = ' / '.join(movie_data['genre'])
 		# end of genre mapping 
 
-		return render(request,'similar_movies/movie.html',{'status':True,'data':movie_data})
+		return movie_data
 	except :
+		return False
+
+def yts_movie(movie_id,with_images='true',with_cast='true'):
+	try:
+		required_dict = {'movie_id':movie_id,'with_images':with_images,'with_cast':with_cast}
+		print(required_dict)
+		response = requests.get('https://yts.mx/api/v2/movie_details.json',params=required_dict)
+		return response.json()
+	except:
+		return False
+	
+def movie(request,yts_id,imdb_id):
+	yts_response = yts_movie(yts_id)
+	if yts_response:
+		yts_response = yts_response['data']['movie']
+		print(yts_response)
+		imdb_response = tmdb_movie(imdb_id)
+		if imdb_response:
+			yts_response['movie_image'] = imdb_response['movie_poster']
+		else :
+			yts_response['movie_image'] = yts_response['background_image_original']
+		yts_response['genres'] = ' / '.join(yts_response['genres'])
+
+		return render(request,'similar_movies/movie.html',{'status':True,'data':yts_response})
+	else:
 		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
