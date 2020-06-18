@@ -9,4 +9,5 @@ urlpatterns = [
 	path('browse-movie',views.browse_movie,name='browse-movie'),
 	path('browse-movie-form',views.browse_movie_form,name='browse-movie-form'),
 	path('movie/<str:yts_id>/<str:imdb_id>',views.movie,name='movie'),
+	path('similar-movies',views.similar_movies,name='similar-movies')
 ]
