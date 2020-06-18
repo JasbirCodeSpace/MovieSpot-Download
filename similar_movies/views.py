@@ -47,7 +47,6 @@ def search_movie(request):
 			movie_name = request.POST['movie-name']
 			search  = tmdb.Search()
 			response = search.movie(query=movie_name)
-			# print(search.genre())
 			return JsonResponse({'data':search.results},safe=False)
 		except :
 			return JsonResponse({'error':"Error while fetching movie"},safe=False)
@@ -92,10 +91,10 @@ def tmdb_movie(imdb_id):
 	except :
 		return False
 
+	
 def yts_movie(movie_id,with_images='true',with_cast='true'):
 	try:
 		required_dict = {'movie_id':movie_id,'with_images':with_images,'with_cast':with_cast}
-		print(required_dict)
 		response = requests.get('https://yts.mx/api/v2/movie_details.json',params=required_dict)
 		return response.json()
 	except:
@@ -105,13 +104,13 @@ def movie(request,yts_id,imdb_id):
 	yts_response = yts_movie(yts_id)
 	if yts_response:
 		yts_response = yts_response['data']['movie']
-		print(yts_response)
+		yts_response['runtime_hours'] = int(yts_response['runtime']/60)
+		yts_response['runtime_minutes'] = int(yts_response['runtime'] % 60)
 		imdb_response = tmdb_movie(imdb_id)
 		if imdb_response:
 			yts_response['movie_image'] = imdb_response['movie_poster']
 		else :
 			yts_response['movie_image'] = yts_response['background_image_original']
-		yts_response['genres'] = ' / '.join(yts_response['genres'])
 
 		return render(request,'similar_movies/movie.html',{'status':True,'data':yts_response})
 	else:
