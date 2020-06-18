@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
+from django.conf import settings
 from imdb import IMDb, IMDbError
 import tmdbsimple as tmdb
 import requests
 from urllib import parse
+import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 moviesDB = IMDb()
 tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
@@ -33,10 +38,6 @@ def browse_movie_form(request):
 
 	return JsonResponse({'status':False,'error':'Invalid Request'},safe=False)
 
-def genre():
-	response = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +  tmdb.API_KEY + '&language=en-US')
-	return response.json()
-
 def get_genre(request):
 	genre_json = genre()
 	return JsonResponse(genre_json,safe=False)
@@ -52,6 +53,50 @@ def search_movie(request):
 			return JsonResponse({'error':"Error while fetching movie"},safe=False)
 	else:
 		return JsonResponse({'error':'Only POST requests allowed'},safe=False)
+	
+def movie(request,yts_id,imdb_id):
+	yts_response = yts_movie(yts_id)
+	if yts_response:
+		yts_response = yts_response['data']['movie']
+		yts_response['runtime_hours'] = int(yts_response['runtime']/60)
+		yts_response['runtime_minutes'] = int(yts_response['runtime'] % 60)
+		imdb_response = tmdb_movie(imdb_id)
+		if imdb_response:
+			yts_response['movie_image'] = imdb_response['movie_poster']
+		else :
+			yts_response['movie_image'] = yts_response['background_image_original']
+
+		return render(request,'similar_movies/movie.html',{'status':True,'data':yts_response})
+	else:
+		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
+
+def similar_movies(request):
+	file_path = settings.BASE_DIR+'/similar_movies/yts_movies.csv'
+	df = pd.read_csv(file_path,sep=',')
+
+	features = ['title','genres']
+	for feature in features:
+		df[feature] = df[feature].fillna('')
+
+	df['combined_features'] = df.apply(combine_features,args=[features],axis=1)
+
+	cv = CountVectorizer()
+	count_matrix = cv.fit_transform(df['combined_features'])
+	cosine_similarity_scores = cosine_similarity(count_matrix)
+	movie_id = '18414'
+	movie_row = df[df.id == movie_id].values[0]
+	print(movie_row)
+
+
+	return HttpResponse(request,'here')
+
+# =========================================================================================
+# Helper methods
+# ========================================================================================
+def genre():
+	response = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +  tmdb.API_KEY + '&language=en-US')
+	return response.json()
+
 
 def tmdb_movie(imdb_id):
 	try:
@@ -99,19 +144,13 @@ def yts_movie(movie_id,with_images='true',with_cast='true'):
 		return response.json()
 	except:
 		return False
-	
-def movie(request,yts_id,imdb_id):
-	yts_response = yts_movie(yts_id)
-	if yts_response:
-		yts_response = yts_response['data']['movie']
-		yts_response['runtime_hours'] = int(yts_response['runtime']/60)
-		yts_response['runtime_minutes'] = int(yts_response['runtime'] % 60)
-		imdb_response = tmdb_movie(imdb_id)
-		if imdb_response:
-			yts_response['movie_image'] = imdb_response['movie_poster']
-		else :
-			yts_response['movie_image'] = yts_response['background_image_original']
 
-		return render(request,'similar_movies/movie.html',{'status':True,'data':yts_response})
-	else:
-		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
+def combine_features(row,features):
+	try:
+		combined_data = ""
+		for feature in features:
+			combined_data += row[feature] + " " 
+		return combined_data
+	except Exception as e:
+		return combined_data
+
