@@ -7,8 +7,10 @@ import requests
 from urllib import parse
 import pandas as pd
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import json
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
+from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
+from django.views.decorators.csrf import csrf_exempt
 
 moviesDB = IMDb()
 tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
@@ -70,25 +72,38 @@ def movie(request,yts_id,imdb_id):
 	else:
 		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
 
+@csrf_exempt
 def similar_movies(request):
-	file_path = settings.BASE_DIR+'/similar_movies/yts_movies.csv'
-	df = pd.read_csv(file_path,sep=',')
+	if request.method == 'POST':
+		try:
+			movie_id = int(request.POST.get('movie_id'))
+			similar_movie_count = 10
 
-	features = ['title','genres']
-	for feature in features:
-		df[feature] = df[feature].fillna('')
+			file_path = settings.BASE_DIR+'/similar_movies/yts_movies.csv'
+			movies = pd.read_csv(file_path,sep=',')
+			movie_index = movies[movies.id == movie_id].index
 
-	df['combined_features'] = df.apply(combine_features,args=[features],axis=1)
+			features = ['genres','title']
+			for feature in features:
+				movies[feature] = movies[feature].fillna('')
 
-	cv = CountVectorizer()
-	count_matrix = cv.fit_transform(df['combined_features'])
-	cosine_similarity_scores = cosine_similarity(count_matrix)
-	movie_id = '18414'
-	movie_row = df[df.id == movie_id].values[0]
-	print(movie_row)
+			movies['combined_features'] = movies.apply(combine_features,args=[features],axis=1)
+			tfidf = TfidfVectorizer(stop_words='english')
+			tfidf_matrix = tfidf.fit_transform(movies['combined_features'])
 
-
-	return HttpResponse(request,'here')
+			cosine_similarity_scores = linear_kernel(tfidf_matrix,tfidf_matrix[movie_index])
+			similar_movies = list(enumerate(cosine_similarity_scores))
+			similar_movies = sorted(similar_movies,key=lambda x:x[1],reverse=True)
+			similar_movies_response = []
+			for i in range(1,similar_movie_count+1):
+				similar_movies_response.append(get_movie_from_index(movies,similar_movies[i][0]))
+			data = json.dumps(similar_movies_response, cls=NpEncoder)
+			print(data)
+			return JsonResponse({'status':True,'data':data},safe=False)
+		except:
+			return JsonResponse({'status':True,'error':"Error while processing requests"})
+	else:
+		return JsonResponse({'status':False,'error':'Invalid Request'})
 
 # =========================================================================================
 # Helper methods
@@ -154,3 +169,23 @@ def combine_features(row,features):
 	except Exception as e:
 		return combined_data
 
+def get_movie_from_index(df,index):
+	movie = df[df.index == index]
+	result = {}
+	result['id'] = movie['id'].values[0]
+	result['imdb_code'] = movie['imdb_code'].values[0]
+	result['title'] = movie['title'].values[0]
+	result['year'] = movie['year'].values[0]
+	result['medium_cover_image'] = movie['medium_cover_image'].values[0]
+	return result
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(NpEncoder, self).default(obj)
