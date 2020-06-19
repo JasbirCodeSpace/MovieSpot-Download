@@ -66,6 +66,6 @@ $(document).ready(function () {
 		let url = document.getElementById('browse-movie-section').getAttribute('data-url')
 		url = url.replace('imdb_id',ids[1])
 		url = url.replace('id',ids[0])
-		window.location = url
+		window.open(url,'_blank')
 	}
 })

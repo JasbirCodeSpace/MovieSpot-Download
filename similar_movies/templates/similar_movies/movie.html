@@ -7,7 +7,8 @@
 {% endblock css %}
 {% block content %}
 {% if status %}
-<section id="movie-description">
+<section id="movie-description" class="mt-5">
+	{% csrf_token %}
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
@@ -102,7 +103,7 @@
 </div>
 </section>
 
-<section id="similar-movies" class="ftco-section ftco-no-pt ftc-no-pb">
+<section id="similar-movies-section" class="ftco-section ftco-no-pt ftc-no-pb"  data-url="{% url 'movie' 'id' 'imdb_id' %}">
 	<div class="container">
 		<div class="row">
 			<h2>Similar Movies</h2>
@@ -113,4 +114,5 @@
 {% endblock content %}
 {% block javascript %}
 {{	block.super }}
+  <script src="{% static 'similar_movies/js/movie.js' %}"></script>
 {% endblock javascript %}
