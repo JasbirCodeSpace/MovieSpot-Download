@@ -77,7 +77,8 @@ def similar_movies(request):
 	if request.method == 'POST':
 		try:
 			movie_id = int(request.POST.get('movie_id'))
-			similar_movie_count = 10
+			similar_movie_count = int(request.POST.get('movie_count'))
+			print(similar_movie_count)
 
 			file_path = settings.BASE_DIR+'/similar_movies/yts_movies.csv'
 			movies = pd.read_csv(file_path,sep=',')

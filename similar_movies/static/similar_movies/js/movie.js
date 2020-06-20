@@ -1,20 +1,24 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
 	let url_parts = window.location.href.split('/')
-	let movie_id = url_parts[url_parts.length-2]
+	let movie_id = url_parts[url_parts.length - 2]
+	let movie_count = 6
 	$.ajax({
-		type:'POST',
-		url:'/similar-movies',
-		data:{movie_id:movie_id},
-		success:function(result){
-							if (result.status === true) {
-					let movies = JSON.parse(result.data)
-					let movie_container = `
+		type: 'POST',
+		url: '/similar-movies',
+		data: {
+			movie_id: movie_id,
+			movie_count: movie_count
+		},
+		success: function (result) {
+			if (result.status === true) {
+				let movies = JSON.parse(result.data)
+				let movie_container = `
 					<div class="text-center"><h2 class="purple-heading">Similar Movies</h2></div>
 							<div class="container">
 								<div class="cards">`
-					for (let i = 0; i < movies.length; i++) {
-						movie_container += `<div class="card" id="${movies[i].id}-${movies[i].imdb_code}">
+				for (let i = 0; i < movies.length; i++) {
+					movie_container += `<div class="card" id="${movies[i].id}-${movies[i].imdb_code}">
 			<div class="card__media">
 				<img src="${movies[i].medium_cover_image}" class="responsive-img movie-card-image">
 			</div>
@@ -27,32 +31,32 @@ $(document).ready(function(){
 					</svg>
 				</div>
 			</div></div>`
-					}
-					movie_container += `</div></div>`
-
-					let movie_section = document.getElementById('similar-movies-section')
-					movie_section.innerHTML = ``
-					movie_section.insertAdjacentHTML('beforeend', movie_container)
-
 				}
+				movie_container += `</div></div>`
+
+				let movie_section = document.getElementById('similar-movies-section')
+				movie_section.innerHTML = ``
+				movie_section.insertAdjacentHTML('beforeend', movie_container)
+
+			}
 		},
-		error:function(error){
+		error: function (error) {
 			console.log(error)
 		},
-					complete:function(data){
-				let movie_cards = document.getElementsByClassName('card')
-				for (var i = 0; i < movie_cards.length; i++) {
-					movie_cards[i].addEventListener('click',e=>{
-						redirect_to_movie(e.currentTarget)
-					})
-				}	
+		complete: function (data) {
+			let movie_cards = document.getElementsByClassName('card')
+			for (var i = 0; i < movie_cards.length; i++) {
+				movie_cards[i].addEventListener('click', e => {
+					redirect_to_movie(e.currentTarget)
+				})
 			}
+		}
 	})
-	const redirect_to_movie = (target)=>{
+	const redirect_to_movie = (target) => {
 		let ids = target.id.split('-')
 		let url = document.getElementById('similar-movies-section').getAttribute('data-url')
-		url = url.replace('imdb_id',ids[1])
-		url = url.replace('id',ids[0])
+		url = url.replace('imdb_id', ids[1])
+		url = url.replace('id', ids[0])
 		window.location = url
 	}
 })
