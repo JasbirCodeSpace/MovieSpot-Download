@@ -1,0 +1,51 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{% static 'movies/image/logo.ico' %}">
+    <title>MovieSpot | Home</title>
+    {% block css %}
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,,500,600,700" rel="stylesheet">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+    <link rel="stylesheet" href="{% static 'movies/css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
+    {% endblock css %}
+  </head>
+  <body data-spy = 'scroll'>
+    {% include 'movies/navbar.html' %}
+    {% block content %}
+    {% endblock content %}
+
+
+  {% block javascript %}
+  <script src="{% static 'movies/js/jquery.min.js' %}"></script>
+  <script src="{% static 'movies/js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'movies/js/popper.min.js' %}"></script>
+  <script src="{% static 'movies/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'movies/js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'movies/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'movies/js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'movies/js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'movies/js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'movies/js/aos.js' %}"></script>
+  <script src="{% static 'movies/js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'movies/js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'movies/js/scrollax.min.js' %}"></script>
+  <script src="{% static 'movies/js/main.js' %}"></script>
+  {% endblock javascript %}
+  </body>
+</html>

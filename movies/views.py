@@ -16,10 +16,10 @@ moviesDB = IMDb()
 tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
 
 def home(request):
-	return render(request,'similar_movies/index.html')
+	return render(request,'movies/index.html')
 
 def browse_movie(request):
-	return render(request,'similar_movies/browse.html')
+	return render(request,'movies/browse.html')
 
 def browse_movie_form(request):
 	if request.method == 'POST':
@@ -68,9 +68,9 @@ def movie(request,yts_id,imdb_id):
 		else :
 			yts_response['movie_image'] = yts_response['background_image_original']
 
-		return render(request,'similar_movies/movie.html',{'status':True,'data':yts_response})
+		return render(request,'movies/movie.html',{'status':True,'data':yts_response})
 	else:
-		return render(request,'similar_movies/movie.html',{'status':False,'error':'Movie not found'})
+		return render(request,'movies/movie.html',{'status':False,'error':'Movie not found'})
 
 @csrf_exempt
 def similar_movies(request):
@@ -78,9 +78,8 @@ def similar_movies(request):
 		try:
 			movie_id = int(request.POST.get('movie_id'))
 			similar_movie_count = int(request.POST.get('movie_count'))
-			print(similar_movie_count)
 
-			file_path = settings.BASE_DIR+'/similar_movies/yts_movies.csv'
+			file_path = settings.BASE_DIR+'/movies/yts_movies.csv'
 			movies = pd.read_csv(file_path,sep=',')
 			movie_index = movies[movies.id == movie_id].index
 
@@ -99,7 +98,6 @@ def similar_movies(request):
 			for i in range(1,similar_movie_count+1):
 				similar_movies_response.append(get_movie_from_index(movies,similar_movies[i][0]))
 			data = json.dumps(similar_movies_response, cls=NpEncoder)
-			print(data)
 			return JsonResponse({'status':True,'data':data},safe=False)
 		except:
 			return JsonResponse({'status':True,'error':"Error while processing requests"})
@@ -173,6 +171,7 @@ def combine_features(row,features):
 def get_movie_from_index(df,index):
 	movie = df[df.index == index]
 	result = {}
+	print(movie)
 	result['id'] = movie['id'].values[0]
 	result['imdb_code'] = movie['imdb_code'].values[0]
 	result['title'] = movie['title'].values[0]

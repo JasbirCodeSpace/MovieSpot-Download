@@ -1,9 +1,9 @@
-{% extends 'similar_movies/base.html' %}
+{% extends 'movies/base.html' %}
 {% load static %}
 {% block css %}
 {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/movie-cards.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'similar_movies/css/movie.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie-cards.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie.css' %}">
 {% endblock css %}
 {% block content %}
 {% if status %}
@@ -25,7 +25,7 @@
 				<div class="mt-3">
 					<div class="mb-2">
 						<a href="https://www.imdb.com/title/{{data.imdb_code}}" title="IMDB Rating" target="_blank">
-						<img class='icon' src="{% static 'similar_movies/image/imdb.svg' %}">
+						<img class='icon' src="{% static 'movies/image/imdb.svg' %}">
 						</a>
 						<span class="p-2 icon-text font-weight-700">{{data.rating}}</span>
 					</div>
@@ -35,19 +35,19 @@
 					</div>
 					<div class="mb-2">
 						{% if data.mpa_rating == 'PG' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_pg.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_pg.png'%}">
 						{% elif data.mpa_rating == 'G' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_g.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_g.png'%}">
 						{% elif data.mpa_rating == 'NC-17' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_nc_17.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_nc_17.png'%}">
 						{% elif data.mpa_rating == 'PG-13' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_pg_13.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_pg_13.png'%}">
 						{% elif data.mpa_rating == 'R' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_r.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_r.png'%}">
 						{% elif data.mpa_rating == 'NR' %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_nr.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_nr.png'%}">
 						{% else %}
-						<img class="icon" src="{% static 'similar_movies/image/rated_ur.png'%}">
+						<img class="icon" src="{% static 'movies/image/rated_ur.png'%}">
 						{% endif %}
 					</div>
 				</div>
@@ -109,5 +109,5 @@
 {% endblock content %}
 {% block javascript %}
 {{	block.super }}
-<script src="{% static 'similar_movies/js/movie.js' %}"></script>
+<script src="{% static 'movies/js/movie.js' %}"></script>
 {% endblock javascript %}

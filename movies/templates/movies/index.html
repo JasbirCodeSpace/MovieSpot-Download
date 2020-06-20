@@ -1,4 +1,4 @@
-{% extends 'similar_movies/base.html' %}
+{% extends 'movies/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -7,7 +7,7 @@
       <div class="overlay"></div>
       <div class="container-fluid px-0">
       	<div class="row d-md-flex no-gutters slider-text align-items-center js-fullheight justify-content-end">
-	      	<img class="js-fullheight align-self-end order-md-last img-fluid" src="{% static 'similar_movies/image/undraw_pair_programming_njlp.svg' %}" alt="">
+	      	<img class="js-fullheight align-self-end order-md-last img-fluid" src="{% static 'movies/image/undraw_pair_programming_njlp.svg' %}" alt="">
 	        <div class="one-forth d-flex align-items-center ftco-animate js-fullheight">
 	        	<div class="text mt-5">
 	            <h1 class="mb-3"><span>Welcome to</span> <span>MovieSpot</span></h1>
@@ -50,5 +50,5 @@
 
 {% block javascript %}
   {{ block.super }}
-  <script src="{% static 'similar_movies/js/index.js' %}"></script>
+  <script src="{% static 'movies/js/index.js' %}"></script>
 {% endblock javascript%}

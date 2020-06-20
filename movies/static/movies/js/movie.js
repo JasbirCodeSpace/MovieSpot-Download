@@ -13,6 +13,7 @@ $(document).ready(function () {
 		success: function (result) {
 			if (result.status === true) {
 				let movies = JSON.parse(result.data)
+
 				let movie_container = `
 					<div class="text-center"><h2 class="purple-heading">Similar Movies</h2></div>
 							<div class="container">

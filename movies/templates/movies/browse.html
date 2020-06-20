@@ -1,8 +1,8 @@
-{% extends 'similar_movies/base.html' %}
+{% extends 'movies/base.html' %}
 {% load static %}
 {% block css %}
 	{{block.super}}
-	<link rel="stylesheet" href="{% static 'similar_movies/css/movie-cards.css' %}">
+	<link rel="stylesheet" href="{% static 'movies/css/movie-cards.css' %}">
 {% endblock css%}
 {% block content %}
 <section class="img browse-section" id="browse-search">
@@ -193,5 +193,5 @@
 
 {% block javascript %}
 	{{	block.super }}
-	<script src="{%	static 'similar_movies/js/browse.js' %}"></script>
+	<script src="{%	static 'movies/js/browse.js' %}"></script>
 {% endblock javascript %}
