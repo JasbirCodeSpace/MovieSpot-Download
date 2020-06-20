@@ -1,5 +1,4 @@
 from django.urls import path
-import django.views.defaults as default_view
 from . import views
 
 urlpatterns = [
