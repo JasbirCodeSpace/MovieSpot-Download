@@ -16,27 +16,58 @@ moviesDB = IMDb()
 tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
 
 def home(request):
-	return render(request,'movies/index.html')
+	return render(request,'movies/index.html',{'nav_home':'active'})
 
 def browse_movie(request):
-	return render(request,'movies/browse.html')
+	return render(request,'movies/browse.html',{'nav_browse':'active'})
+
+def movie_recommendation(request):
+	return render(request,'movies/recommendation.html',{'nav_recommend':'active'})
+
+def movie_recommend(request):
+	if request.method == 'POST':
+		# try:
+			movie_name = request.POST.get('movie-name')
+			sort_by = 'rating'
+			limit = 1
+			required_dict = {'query_term':movie_name,'sort_by':sort_by,'limit':limit}
+			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
+			if response:
+				response = response.json()['data']
+				if(response['movie_count'] > 0 and 'movies' in response):
+					movie = response['movies'][0]
+					movie_id = movie['id']
+					movie_imdb_code = movie['imdb_code']
+					output = yts_similar_movies(movie_id,25)
+					return JsonResponse({'status':True,'data':output},safe=False)
+				else:
+					return JsonResponse({'status':False,'error':'No match found'},safe=False)
+			else:
+				return JsonResponse({'status':False,'error':'No match found'},safe=False)
+		# except Exception as e:
+		# 	return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
+	else:
+		return JsonResponse({'status':False,'error':'Invalid Request'})
+
 
 def browse_movie_form(request):
 	if request.method == 'POST':
+		try :
+			query_term = request.POST.get('movie-name')
+			quality = request.POST.get('movie-quality')
+			genre = request.POST.get('movie-genre')
+			sort_by = request.POST.get('movie-order')
+			year = request.POST.get('movie-year')
+			language = request.POST.get('movie-language')
 
-		query_term = request.POST.get('movie-name')
-		quality = request.POST.get('movie-quality')
-		genre = request.POST.get('movie-genre')
-		sort_by = request.POST.get('movie-order')
-		year = request.POST.get('movie-year')
-		language = request.POST.get('movie-language')
-
-		required_dict = {'query_term':query_term,'quality':quality,'genre':genre,'sort_by':sort_by,'limit':50}
-		response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
-		if response:
-			return JsonResponse({'status':True,'data':response.json()},safe=False)
-		else :
-			return JsonResponse({'status':False,'error':response.json()},safe=False)
+			required_dict = {'query_term':query_term,'quality':quality,'genre':genre,'sort_by':sort_by,'limit':50}
+			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
+			if response:
+				return JsonResponse({'status':True,'data':response.json()},safe=False)
+			else :
+				return JsonResponse({'status':False,'error':'No match found'},safe=False)
+		except :
+			return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
 
 	return JsonResponse({'status':False,'error':'Invalid Request'},safe=False)
 
@@ -78,38 +109,40 @@ def similar_movies(request):
 		try:
 			movie_id = int(request.POST.get('movie_id'))
 			similar_movie_count = int(request.POST.get('movie_count'))
-
-			file_path = settings.BASE_DIR+'/movies/yts_movies.csv'
-			movies = pd.read_csv(file_path,sep=',')
-			movie_index = movies[movies.id == movie_id].index
-
-			features = ['genres','title']
-			for feature in features:
-				movies[feature] = movies[feature].fillna('')
-
-			movies['combined_features'] = movies.apply(combine_features,args=[features],axis=1)
-			tfidf = TfidfVectorizer(stop_words='english')
-			tfidf_matrix = tfidf.fit_transform(movies['combined_features'])
-
-			cosine_similarity_scores = linear_kernel(tfidf_matrix,tfidf_matrix[movie_index])
-			similar_movies = list(enumerate(cosine_similarity_scores))
-			similar_movies = sorted(similar_movies,key=lambda x:x[1],reverse=True)
-			similar_movies_response = []
-			for i in range(1,similar_movie_count+1):
-				similar_movies_response.append(get_movie_from_index(movies,similar_movies[i][0]))
-			data = json.dumps(similar_movies_response, cls=NpEncoder)
-			return JsonResponse({'status':True,'data':data},safe=False)
+			response = yts_similar_movies(movie_id)
+			return JsonResponse({'status':True,'data':response},safe=False)
 		except:
 			return JsonResponse({'status':True,'error':"Error while processing requests"})
 	else:
 		return JsonResponse({'status':False,'error':'Invalid Request'})
-
 # =========================================================================================
 # Helper methods
 # ========================================================================================
 def genre():
 	response = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +  tmdb.API_KEY + '&language=en-US')
 	return response.json()
+
+def yts_similar_movies(movie_id,similar_movie_count):
+	file_path = settings.BASE_DIR+'/movies/yts_movies.csv'
+	movies = pd.read_csv(file_path,sep=',')
+	movie_index = movies[movies.id == movie_id].index
+
+	features = ['genres','title']
+	for feature in features:
+		movies[feature] = movies[feature].fillna('')
+
+	movies['combined_features'] = movies.apply(combine_features,args=[features],axis=1)
+	tfidf = TfidfVectorizer(stop_words='english')
+	tfidf_matrix = tfidf.fit_transform(movies['combined_features'])
+
+	cosine_similarity_scores = linear_kernel(tfidf_matrix,tfidf_matrix[movie_index])
+	similar_movies = list(enumerate(cosine_similarity_scores))
+	similar_movies = sorted(similar_movies,key=lambda x:x[1],reverse=True)
+	similar_movies_response = []
+	for i in range(1,similar_movie_count+1):
+		similar_movies_response.append(get_movie_from_index(movies,similar_movies[i][0]))
+	data = json.dumps(similar_movies_response, cls=NpEncoder)
+	return data
 
 
 def tmdb_movie(imdb_id):
@@ -171,7 +204,6 @@ def combine_features(row,features):
 def get_movie_from_index(df,index):
 	movie = df[df.index == index]
 	result = {}
-	print(movie)
 	result['id'] = movie['id'].values[0]
 	result['imdb_code'] = movie['imdb_code'].values[0]
 	result['title'] = movie['title'].values[0]
