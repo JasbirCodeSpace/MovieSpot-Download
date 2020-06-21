@@ -10,11 +10,9 @@
 
           <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item active"><a href="{% url 'movie-home' %}" class="nav-link">Home</a></li>
-              <li class="nav-item"><a href="{% url 'browse-movie' %}" class="nav-link">Browse Movies</a></li>
-              <li class="nav-item"><a href="domain.html" class="nav-link">Recommendation</a></li>
-               <li class="nav-item"><a href="contact.html" class="nav-link"><span>Register</span></a></li>             
-              <li class="nav-item"><a href="contact.html" class="nav-link"><span>Login</span></a></li>
+              <li class="nav-item {{nav_home}}"><a href="{% url 'movie-home' %}" class="nav-link">Home</a></li>
+              <li class="nav-item {{nav_browse}}"><a href="{% url 'browse-movie' %}" class="nav-link">Browse Movies</a></li>
+              <li class="nav-item {{nav_recommend}}"><a href="{% url 'movie-recommendation' %}" class="nav-link">Recommendation</a></li>
             </ul>
           </div>
         </div>

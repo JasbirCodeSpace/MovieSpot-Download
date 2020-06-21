@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	const form = document.getElementById('search-form')
+	let search_form = document.getElementById('search-form')
 	const csrftoken = $("[name=csrfmiddlewaretoken]").val();
 	let genre = {}
 
@@ -36,13 +36,13 @@ $(document).ready(function(){
 	}
 	getGenre()
 
-	form.addEventListener('submit',(event)=>{
+	search_form.addEventListener('submit',(event)=>{
 		event.preventDefault()
 		let movieName = document.getElementById('movie-name').value
 
 		$.ajax({
 			type:'POST',
-			url: form.getAttribute('data-url'),
+			url: search_form.getAttribute('data-url'),
 	        headers:{
 	        	"X-CSRFToken": csrftoken
 	        },

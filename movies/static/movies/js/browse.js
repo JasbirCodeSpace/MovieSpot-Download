@@ -1,17 +1,17 @@
 $(document).ready(function () {
-	const form = document.getElementById('browse-movie-form')
+	let browse_movie_form = document.getElementById('browse-movie-form')
 	const csrftoken = $('[name=csrfmiddlewaretoken]').val()
 
-	form.addEventListener('submit', (event) => {
+	browse_movie_form.addEventListener('submit', (event) => {
 		event.preventDefault()
 		let formdata = new FormData(document.getElementById('browse-movie-form'))
 		let data = {}
-		for (var [key, value] of formdata.entries()) {
+		for (let [key, value] of formdata.entries()) {
 			data[key] = value
 		}
 		$.ajax({
 			type: 'POST',
-			url: form.getAttribute('data-url'),
+			url: browse_movie_form.getAttribute('data-url'),
 			headers: {
 				'X-CSRFToken': csrftoken
 			},

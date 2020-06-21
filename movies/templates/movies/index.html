@@ -1,6 +1,9 @@
 {% extends 'movies/base.html' %}
 {% load static %}
-
+{% block title %} MovieSpot | Home {% endblock title%}
+{% block css %}
+  {{block.super}}
+{% endblock css %}
 {% block content %}
 <section>
     <div class="hero-wrap js-fullheight">
