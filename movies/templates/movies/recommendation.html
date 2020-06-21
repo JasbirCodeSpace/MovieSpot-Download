@@ -1,0 +1,38 @@
+{% extends 'movies/base.html' %}
+{% load static %}
+{% block title %} MovieSpot | Recommendation {% endblock title%}
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie-cards.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'movies/css/recommendation.css' %}">
+{% endblock css %}
+{% block content %}
+<section id="search-section" class="section">
+    	<div class="container">
+    		<div class="row d-flex align-items-center">
+    			<div class="col-lg-5 heading-white mb-4 mb-sm-4 mb-lg-0 ftco-animate">
+    				<h1 class="purple-heading">Which movie do you like? </h1>
+    			</div>
+    			<div class="col-lg-7 col-sm-12 col-md-12 p-5 ftco-wrap ftco-animate">
+    				<form action="" class="domain-form d-flex mb-3" id="recommendation-form" data-url="{% url 'movie-recommend' %}">
+              {% csrf_token %}
+              <div class="form-group domain-name">
+                <input name="movie-name" id="movie-name" type="text" class="form-control name px-4" placeholder="Enter your movie name..." required>
+              </div>
+              <div class="form-group domain-select d-flex">
+                <input type="submit" class="search-domain btn btn-primary text-center" value="Search">
+	            </div>
+            </form>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+<section class="section" id="similar-movies-section" data-url="{% url 'movie' 'id' 'imdb_id' %}">
+
+</section>
+{% endblock content %}
+
+{% block javascript %}
+	{{block.super}}
+	<script src="{% static 'movies/js/recommendation.js' %}"></script>
+{% endblock javascript %}
