@@ -40,6 +40,14 @@ $(document).ready(function(){
 		event.preventDefault()
 		let movieName = document.getElementById('movie-name').value
 
+		let loader = `<div id="ftco-loader" class="show">
+		<svg class="circular" width="48px" height="48px">
+		<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+		<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+		</svg></div>`
+		let moviesContainer = document.getElementById('movie-search-result-container')
+		moviesContainer.innerHTML = loader
+
 		$.ajax({
 			type:'POST',
 			url: search_form.getAttribute('data-url'),
@@ -52,7 +60,6 @@ $(document).ready(function(){
 	        dataType:'json',
 			success:function(results){
 				movies = results.data
-				let moviesContainer = document.getElementById('movie-search-result-container')
 				moviesContainer.innerHTML = ''
 				for (var i = 0; i < movies.length; i++) {
 					if(movies[i].poster_path && movies[i].release_date && movies[i].overview){
@@ -82,6 +89,7 @@ $(document).ready(function(){
 		        <div class="blur_back" style="background:url('https://image.tmdb.org/t/p/w500${ movies[i].poster_path}')"></div>`
 
 		        moviesContainer.insertAdjacentHTML('beforeend',htmlData)
+		        moviesContainer.scrollIntoView()
 		    }
 
 				}
@@ -91,4 +99,15 @@ $(document).ready(function(){
 			}
 		})
 	})
+	const scrollToTargetAdjusted = (id)=>{
+    var element = document.getElementById(id);
+    var headerOffset = 150;
+    var elementPosition = element.getBoundingClientRect().top;
+    var offsetPosition = elementPosition - headerOffset;
+
+    window.scrollTo({
+         top: offsetPosition,
+         behavior: "smooth"
+    });
+}
 })

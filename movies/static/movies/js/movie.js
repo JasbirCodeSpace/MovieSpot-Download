@@ -3,6 +3,13 @@ $(document).ready(function () {
 	let url_parts = window.location.href.split('/')
 	let movie_id = url_parts[url_parts.length - 2]
 	let movie_count = 6
+	let loader = `<div id="ftco-loader" class="show">
+		<svg class="circular" width="48px" height="48px">
+		<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+		<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+		</svg></div>`
+	let movie_section = document.getElementById('similar-movies-section')
+	movie_section.innerHTML = loader
 	$.ajax({
 		type: 'POST',
 		url: '/similar-movies',
@@ -34,8 +41,6 @@ $(document).ready(function () {
 			</div></div>`
 				}
 				movie_container += `</div></div>`
-
-				let movie_section = document.getElementById('similar-movies-section')
 				movie_section.innerHTML = ``
 				movie_section.insertAdjacentHTML('beforeend', movie_container)
 

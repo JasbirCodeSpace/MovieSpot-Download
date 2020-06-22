@@ -109,10 +109,10 @@ def similar_movies(request):
 		try:
 			movie_id = int(request.POST.get('movie_id'))
 			similar_movie_count = int(request.POST.get('movie_count'))
-			response = yts_similar_movies(movie_id)
+			response = yts_similar_movies(movie_id,similar_movie_count)
 			return JsonResponse({'status':True,'data':response},safe=False)
 		except:
-			return JsonResponse({'status':True,'error':"Error while processing requests"})
+			return JsonResponse({'status':False,'error':"Error while processing requests"})
 	else:
 		return JsonResponse({'status':False,'error':'Invalid Request'})
 # =========================================================================================

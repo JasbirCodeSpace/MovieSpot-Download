@@ -5,6 +5,13 @@ $(document).ready(function () {
 	recommendation_form.addEventListener('submit', (event) => {
 		event.preventDefault()
 		let movie_name = document.getElementById('movie-name').value
+		let loader = `<div id="ftco-loader" class="show">
+		<svg class="circular" width="48px" height="48px">
+		<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+		<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+		</svg></div>`
+		let movie_section = document.getElementById('similar-movies-section')
+		movie_section.innerHTML = loader
 		$.ajax({
 			type: 'POST',
 			url: recommendation_form.getAttribute('data-url'),
@@ -38,25 +45,24 @@ $(document).ready(function () {
 			</div></div>`
 					}
 					movie_container += `</div></div>`
-
-					let movie_section = document.getElementById('similar-movies-section')
 					movie_section.innerHTML = ``
 					movie_section.insertAdjacentHTML('beforeend', movie_container)
+					scrollToTargetAdjusted('similar-movies-section')
 
 				} else {
 					let movie_container = `
 					<div class="text-center"><h2 class="purple-heading">No Match Found</h2></div>`
-					let movie_section = document.getElementById('similar-movies-section')
 					movie_section.innerHTML = ``
 					movie_section.insertAdjacentHTML('beforeend', movie_container)
+					scrollToTargetAdjusted('similar-movies-section')
 				}
 			},
 			error: function (error) {
 				let movie_container = `
 					<div class="text-center"><h2 class="purple-heading">No Match Found</h2></div>`
-				let movie_section = document.getElementById('similar-movies-section')
 				movie_section.innerHTML = ``
 				movie_section.insertAdjacentHTML('beforeend', movie_container)
+				scrollToTargetAdjusted('similar-movies-section')
 			},
 			complete: function (data) {
 				let movie_cards = document.getElementsByClassName('card')
@@ -74,6 +80,18 @@ $(document).ready(function () {
 		let url = document.getElementById('similar-movies-section').getAttribute('data-url')
 		url = url.replace('imdb_id', ids[1])
 		url = url.replace('id', ids[0])
-		window.location = url
+		window.open(url,'_blank')
 	}
+
+	const scrollToTargetAdjusted = (id)=>{
+    var element = document.getElementById(id);
+    var headerOffset = 150;
+    var elementPosition = element.getBoundingClientRect().top;
+    var offsetPosition = elementPosition - headerOffset;
+
+    window.scrollTo({
+         top: offsetPosition,
+         behavior: "smooth"
+    });
+}
 })
