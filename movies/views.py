@@ -52,21 +52,31 @@ def movie_recommend(request):
 
 def browse_movie_form(request):
 	if request.method == 'POST':
-		try :
-			query_term = request.POST.get('movie-name')
-			quality = request.POST.get('movie-quality')
-			genre = request.POST.get('movie-genre')
-			sort_by = request.POST.get('movie-order')
-			year = request.POST.get('movie-year')
-			language = request.POST.get('movie-language')
+		try:
+			filter = {}
+			filter['query_term'] = request.POST.get('movie-name')
+			filter['quality'] = request.POST.get('movie-quality')
+			filter['genre'] = request.POST.get('movie-genre')
+			filter['sort_by'] = request.POST.get('movie-order')
+			filter['year'] = request.POST.get('movie-year').split('-')
+			if len(filter['year']) == 1:
+				filter['year'][1] = filter['year'][0]
 
-			required_dict = {'query_term':query_term,'quality':quality,'genre':genre,'sort_by':sort_by,'limit':50}
+			filter['language'] = request.POST.get('movie-language')
+			filter['movie-rating'] = request.POST.get('movie-rating')
+			required_dict = {'query_term':filter['query_term'],'quality':filter['quality'],'genre':filter['genre'],'sort_by':filter['sort_by'],'limit':50}
 			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
 			if response:
-				return JsonResponse({'status':True,'data':response.json()},safe=False)
+				movies_response = response.json()
+				if movies_response['data']['movie_count']:
+					movies_result = movies_response['data']['movies']
+					movies = filter_browse_movies(filter, movies_result)
+					print(len(movies))
+					movies_response['data']['movies'] = movies
+				return JsonResponse({'status':True,'data':movies_response},safe=False)
 			else :
 				return JsonResponse({'status':False,'error':'No match found'},safe=False)
-		except :
+		except:
 			return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
 
 	return JsonResponse({'status':False,'error':'Invalid Request'},safe=False)
@@ -114,7 +124,8 @@ def similar_movies(request):
 		except:
 			return JsonResponse({'status':False,'error':"Error while processing requests"})
 	else:
-		return JsonResponse({'status':False,'error':'Invalid Request'})
+		return JsonResponse({'status': False, 'error': 'Invalid Request'})
+
 # =========================================================================================
 # Helper methods
 # ========================================================================================
@@ -191,6 +202,16 @@ def yts_movie(movie_id,with_images='true',with_cast='true'):
 		return response.json()
 	except:
 		return False
+
+def filter_browse_movies(filter, movies):
+	if filter['rating'] != "all":
+		movies = [movie for movie in movies if movie['rating'] >= filter['rating']]
+	if filter['year'][0] != "all":
+		movies = [movie for movie in movies if movie['year'] >= filter['year'][0] and movie['year']<=filter['year'][1]]
+	if filter['language'] != "all":
+		movies = [movie for movie in movies if movie['language'] == filter['language']]
+	print(movies)
+	return movies
 
 def combine_features(row,features):
 	try:
