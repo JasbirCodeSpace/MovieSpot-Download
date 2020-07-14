@@ -11,6 +11,7 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
 from django.views.decorators.csrf import csrf_exempt
+import logging
 
 moviesDB = IMDb()
 tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
@@ -60,10 +61,9 @@ def browse_movie_form(request):
 			filter['sort_by'] = request.POST.get('movie-order')
 			filter['year'] = request.POST.get('movie-year').split('-')
 			if len(filter['year']) == 1:
-				filter['year'][1] = filter['year'][0]
-
+				filter['year'].append(filter['year'][0])
 			filter['language'] = request.POST.get('movie-language')
-			filter['movie-rating'] = request.POST.get('movie-rating')
+			filter['rating'] = request.POST.get('movie-rating')
 			required_dict = {'query_term':filter['query_term'],'quality':filter['quality'],'genre':filter['genre'],'sort_by':filter['sort_by'],'limit':50}
 			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
 			if response:
@@ -71,12 +71,12 @@ def browse_movie_form(request):
 				if movies_response['data']['movie_count']:
 					movies_result = movies_response['data']['movies']
 					movies = filter_browse_movies(filter, movies_result)
-					print(len(movies))
 					movies_response['data']['movies'] = movies
+					movies_response['data']['movie_count'] = len(movies)
 				return JsonResponse({'status':True,'data':movies_response},safe=False)
 			else :
 				return JsonResponse({'status':False,'error':'No match found'},safe=False)
-		except:
+		except Exception as e:
 			return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
 
 	return JsonResponse({'status':False,'error':'Invalid Request'},safe=False)
@@ -205,12 +205,11 @@ def yts_movie(movie_id,with_images='true',with_cast='true'):
 
 def filter_browse_movies(filter, movies):
 	if filter['rating'] != "all":
-		movies = [movie for movie in movies if movie['rating'] >= filter['rating']]
+		movies = [movie for movie in movies if float(movie['rating']) >= float(filter['rating'])]
 	if filter['year'][0] != "all":
-		movies = [movie for movie in movies if movie['year'] >= filter['year'][0] and movie['year']<=filter['year'][1]]
+		movies = [movie for movie in movies if int(movie['year']) >= int(filter['year'][0]) and int(movie['year'])<=int(filter['year'][1])]
 	if filter['language'] != "all":
 		movies = [movie for movie in movies if movie['language'] == filter['language']]
-	print(movies)
 	return movies
 
 def combine_features(row,features):

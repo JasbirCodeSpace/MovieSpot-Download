@@ -30,17 +30,18 @@ $(document).ready(function () {
 					let movies = result_data.movies
 					let movie_container = `
 					<div class="text-center">`
-					if(result_data.movie_count ===0)
-						movie_container+=`<h2 class="purple-heading">No Match found</h2>`
-					else if(result_data.movie_count ===1)
-						movie_container+=`<h2 class="purple-heading">${movies.length} Movie found</h2>`
+					if (result_data.movie_count === 0)
+						movie_container += `<h2 class="purple-heading">No Match found</h2>`
+					else if (result_data.movie_count === 1)
+						movie_container += `<h2 class="purple-heading">${movies.length} Movie found</h2>`
 					else
-						movie_container+=`<h2 class="purple-heading">${movies.length} Movies found</h2>`
+						movie_container += `<h2 class="purple-heading">${movies.length} Movies found</h2>`
 
-					movie_container+=`</div>
+					movie_container += `</div>
 							<div class="container">
 								<div class="cards">`
-					for (var i = 0; i < result_data.movie_count; i++) {
+					for (let i = 0; i < result_data.movie_count; i++) {
+						console.log(movies[i])
 						movie_container += `<div class="card" id="${movies[i].id}-${movies[i].imdb_code}">
 			<div class="card__media">
 				<img src="${movies[i].medium_cover_image}" class="responsive-img movie-card-image">
@@ -60,39 +61,41 @@ $(document).ready(function () {
 					movie_section.insertAdjacentHTML('beforeend', movie_container)
 					scrollToTargetAdjusted('browse-movie-section')
 
+				} else {
+					movie_section.innerHTML = 'Something Went Wrong :('
 				}
 			},
 			error: function (error) {
-				console.log(error)
+				movie_section.innerHTML = 'Something Went Wrong :('
 			},
-			complete:function(data){
+			complete: function (data) {
 				let movie_cards = document.getElementsByClassName('card')
 				for (var i = 0; i < movie_cards.length; i++) {
-					movie_cards[i].addEventListener('click',e=>{
+					movie_cards[i].addEventListener('click', e => {
 						redirect_to_movie(e.currentTarget)
 					})
-				}	
+				}
 			}
 		})
 	})
 
-	const redirect_to_movie = (target)=>{
+	const redirect_to_movie = (target) => {
 		let ids = target.id.split('-')
 		let url = document.getElementById('browse-movie-section').getAttribute('data-url')
-		url = url.replace('imdb_id',ids[1])
-		url = url.replace('id',ids[0])
-		window.open(url,'_blank')
+		url = url.replace('imdb_id', ids[1])
+		url = url.replace('id', ids[0])
+		window.open(url, '_blank')
 	}
 
-	const scrollToTargetAdjusted = (id)=>{
-    var element = document.getElementById(id);
-    var headerOffset = 150;
-    var elementPosition = element.getBoundingClientRect().top;
-    var offsetPosition = elementPosition - headerOffset;
+	const scrollToTargetAdjusted = (id) => {
+		var element = document.getElementById(id);
+		var headerOffset = 150;
+		var elementPosition = element.getBoundingClientRect().top;
+		var offsetPosition = elementPosition - headerOffset;
 
-    window.scrollTo({
-         top: offsetPosition,
-         behavior: "smooth"
-    });
-}
+		window.scrollTo({
+			top: offsetPosition,
+			behavior: "smooth"
+		});
+	}
 })
