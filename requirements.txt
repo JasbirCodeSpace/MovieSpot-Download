@@ -5,6 +5,7 @@ chardet==3.0.4
 dj-database-url==0.5.0
 Django==3.0.8
 django-heroku==0.3.1
+gunicorn==20.0.4
 idna==2.10
 joblib==0.16.0
 numpy==1.19.0
