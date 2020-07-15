@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\JASBIR-PC\\envs\\movie\\Scripts\\python.exe"
+    "python.pythonPath": "C:\\Users\\JASBIR-PC\\envs\\movie\\Scripts\\python.exe",
+    "python.formatting.provider": "black"
 }

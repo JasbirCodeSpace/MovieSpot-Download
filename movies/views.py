@@ -1,22 +1,24 @@
+import json
+import logging
+import requests
+import numpy as np
+import pandas as pd
+from urllib import parse
+import tmdbsimple as tmdb
+from django.conf import settings
+# from imdb import IMDb, IMDbError
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
-from django.conf import settings
-from imdb import IMDb, IMDbError
-import tmdbsimple as tmdb
-import requests
-from urllib import parse
-import pandas as pd
-import numpy as np
-import json
-from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
-from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
 from django.views.decorators.csrf import csrf_exempt
-import logging
+from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 
-moviesDB = IMDb()
-tmdb.API_KEY = 'a25592d6509c51f48ff31ed09207fbaf'
+tmdb.API_KEY = settings.TMDB_API_KEY
+# moviesDB = IMDb()
 
 def home(request):
+	trending_movies = trending('movie', 'day')
+	trending_actors = trending('person', 'day')
 	return render(request,'movies/index.html',{'nav_home':'active'})
 
 def browse_movie(request):
@@ -27,7 +29,7 @@ def movie_recommendation(request):
 
 def movie_recommend(request):
 	if request.method == 'POST':
-		# try:
+		try:
 			movie_name = request.POST.get('movie-name')
 			sort_by = 'rating'
 			limit = 1
@@ -45,8 +47,8 @@ def movie_recommend(request):
 					return JsonResponse({'status':False,'error':'No match found'},safe=False)
 			else:
 				return JsonResponse({'status':False,'error':'No match found'},safe=False)
-		# except Exception as e:
-		# 	return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
+		except Exception as e:
+			return JsonResponse({'status':False,'error':'Error occured while processing request'},safe=False)
 	else:
 		return JsonResponse({'status':False,'error':'Invalid Request'})
 
@@ -194,7 +196,14 @@ def tmdb_movie(imdb_id):
 	except :
 		return False
 
-	
+def trending(media_type, time_window):
+	try:
+		required_dict = {'api_key': tmdb.API_KEY, 'media_type': media_type, 'time_window': time_window}
+		response = requests.get(f'https://api.themoviedb.org/3/trending/{media_type}/{time_window}', params=required_dict)
+		return response.json()['results']
+	except Exception as e:
+		return False
+
 def yts_movie(movie_id,with_images='true',with_cast='true'):
 	try:
 		required_dict = {'movie_id':movie_id,'with_images':with_images,'with_cast':with_cast}
