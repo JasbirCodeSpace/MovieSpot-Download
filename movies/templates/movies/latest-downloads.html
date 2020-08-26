@@ -1,0 +1,27 @@
+{% extends 'movies/base.html' %}
+{% load static %}
+{% block title %} MovieSpot | Home {% endblock title%}
+{% block content %}
+
+<div class="container mx-auto px-4 pt-16">
+    <div class="popular-movies">
+        <h2 class="uppercase tracking-wider text-orange-500 text-lg font-semibold">
+            Latest Downloads
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16">
+            {% if movies %}
+            {% for movie in movies %}
+            {% include 'movies/movie-card.html' with movie=movie only%}
+            {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+{% endblock javascript%}
