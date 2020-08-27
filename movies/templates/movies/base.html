@@ -2,44 +2,76 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{% static 'movies/image/logo.ico' %}">
-    <title>{% block title %}{% endblock title%}</title>
-    {% block css %}
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,,500,600,700" rel="stylesheet">
-    <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
-    <link rel="stylesheet" href="{% static 'movies/css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/animate.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/aos.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
-    {% endblock css %}
-  </head>
-  <body data-spy = 'scroll'>
-    {% include 'movies/navbar.html' %}
-    {% block content %}
-    {% endblock content %}
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="{% static 'movies/image/logo.ico' %}">
+  <title>{% block title %}{% endblock title %}</title>
+
+  {% block css %}
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  {% endblock css %}
+</head>
+
+<body class="font-sans bg-gray-900 text-white">
+  {% include 'movies/navbar.html' %}
+
+  {% block content %}
+  {% endblock content %}
 
 
   {% block javascript %}
-  <script src="{% static 'movies/js/jquery.min.js' %}"></script>
-  <script src="{% static 'movies/js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'movies/js/popper.min.js' %}"></script>
-  <script src="{% static 'movies/js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'movies/js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'movies/js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'movies/js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'movies/js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'movies/js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'movies/js/aos.js' %}"></script>
-  <script src="{% static 'movies/js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'movies/js/scrollax.min.js' %}"></script>
-  <script src="{% static 'movies/js/main.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="{% static 'movies/js/vue-spinner.min.js' %}"></script>
   {% endblock javascript %}
-  </body>
+
+  <script>
+    var app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#search-app',
+      data: {
+          query: '',
+          searchResultsVisible: false,
+          movies:[],
+      },
+      methods: {
+
+          softReset: function(){
+            this.searchResultsVisible = true
+          }, 
+          keyMonitor(e){
+            if(e.key === '/'){
+              console.log(e.keyCode)
+              this.$refs.search.focus()
+            }
+          },
+          performSearch(){
+            if(this.query.length > 2){
+            let url = "{% url 'search-movie' 'query' %}";
+            url = url.replace('query', this.query)
+            axios.get(url)
+              .then(response =>{
+                if(response.data.status === true)
+                  this.movies = JSON.parse(response.data.response)
+                  
+              })
+          }
+          },
+          urlPrepare(id, imdb_code){
+            let url = "{% url 'movie' 'id' 'imdb_code' %}"
+            url = url.replace('id', id).replace('imdb_code', imdb_code)
+            return url
+          }
+      }
+    });
+  </script>
+</body>
 </html>
