@@ -1,114 +1,89 @@
 {% extends 'movies/base.html' %}
 {% load static %}
-{% block title %} MovieSpot | Movie {% endblock title%}
-{% block css %}
-{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie-cards.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie.css' %}">
-{% endblock css %}
+{% load humanize %}
 {% block content %}
-{% if status %}
-<section id="movie-description" class="mt-5">
-	{% csrf_token %}
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-				<div class="card">
-					<div class="card__media">
-						<img src="{{data.movie_image}}" class="responsive-img movie-card-image">
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-8 col-xl-8">
-				<h1 class="font-weight-500">{{data.title}}</h1>
-				<h3>{{data.year}}</h3>
-				<h3 class="mt-3">{{data.genres|join:' / '}}</h3>
-				<div class="mt-3">
-					<div class="mb-2">
-						<a href="https://www.imdb.com/title/{{data.imdb_code}}" title="IMDB Rating" target="_blank">
-						<img class='icon' src="{% static 'movies/image/imdb.svg' %}">
-						</a>
-						<span class="p-2 icon-text font-weight-700">{{data.rating}}</span>
-					</div>
-					<div class="mb-2">
-						<img class="icon" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQn6OcLWNKQOrMOgk9DEAPWfLl_PqSLUPyat6hPoUiHWyVOVwLO&usqp=CAU" title="Runtime">
-						<span class="p-2 icon-text font-weight-700">{{data.runtime_hours}}Hrs {{data.runtime_minutes}}Min</span>
-					</div>
-					<div class="mb-2">
-						{% if data.mpa_rating == 'PG' %}
-						<img class="icon" src="{% static 'movies/image/rated_pg.png'%}">
-						{% elif data.mpa_rating == 'G' %}
-						<img class="icon" src="{% static 'movies/image/rated_g.png'%}">
-						{% elif data.mpa_rating == 'NC-17' %}
-						<img class="icon" src="{% static 'movies/image/rated_nc_17.png'%}">
-						{% elif data.mpa_rating == 'PG-13' %}
-						<img class="icon" src="{% static 'movies/image/rated_pg_13.png'%}">
-						{% elif data.mpa_rating == 'R' %}
-						<img class="icon" src="{% static 'movies/image/rated_r.png'%}">
-						{% elif data.mpa_rating == 'NR' %}
-						<img class="icon" src="{% static 'movies/image/rated_nr.png'%}">
-						{% else %}
-						<img class="icon" src="{% static 'movies/image/rated_ur.png'%}">
-						{% endif %}
-					</div>
-				</div>
-				{% if data.torrents %}
-				<div class="mt-3 mb-3">
-					<span class="pull-left font-weight-700">Available in: &nbsp;</em>
-					{% for torrent in data.torrents %}
-					<a href="{{torrent.url}}" rel="nofollow" title="Download {{data.title}} {{torrent.quality}} {{torrent.type}}" class="torrent-link ml-2 pl-3 pr-3">
-					<span class="font-weight-500">
-					{{torrent.quality}}&nbsp;{{torrent.type|title}}
-					</span>
-					</a>
-					{% endfor %}
-				</div>
-				{% endif %}
-			</div>
-		</div>
-	</div>
-</section>
-<section id="movie-description" class="ftco-section ftco-no-pt ftc-no-pb">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
-				<div class="ftco-animate mt-5 fadeInUp ftco-animated">
-					<h2>Plot</h2>
-					<p>
-						{% if data.description_full %}
-						{{ data.description_full }}
-						{% else %}
-						{{ data.description_intro }}
-						{% endif %}
-					</p>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-				<div class="ftco-animate mt-5 fadeInUp ftco-animated">
-					<h2>Cast</h2>
-					<div class="cast">
-						{% for cast in data.cast %}
-						<div class="mb-3">
-							<img class="img-fluid img-circle" src="{{ cast.url_small_image}}">
-							<span><a href="https://www.imdb.com/name/nm{{cast.imdb_code}}" target="_blank">{{cast.name}}</a></span>
-							<span>{{cast.character_name}}</span>
-						</div>
-						{% endfor %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-<section id="similar-movies-section" class="ftco-section ftco-no-pt ftc-no-pb"  data-url="{% url 'movie' 'id' 'imdb_id' %}">
-	<div class="container">
-		<div class="row">
-		</div>
-	</div>
-</section>
-{% endif %}
-{% endblock content %}
-{% block javascript %}
-{{	block.super }}
-<script src="{% static 'movies/js/movie.js' %}"></script>
-{% endblock javascript %}
+<!-- start movie info  -->
+<div class="movie-info border-b border-gray-800">
+  <div class="container mx-auto px-4 py-16 flex flex-col md:flex-row">
+    <img
+      src="{{ movie.poster_path }}"
+      alt=" {{ movie.title }}"
+      class="w-64 md:w-96"
+    />
+    <div class="md:ml-24">
+      <h2 class="text-3xl font-semibold">{{ movie.title }}</h2>
+      <div class="flex flex-wrap items-center text-gray-400 text-sm">
+        <svg class="fill-current text-orange-500 w-4" viewBox="0 0 24 24">
+          <g data-name="Layer 2">
+            <path
+              d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
+              data-name="star"
+            />
+          </g>
+        </svg>
+        <span class="ml-1">{{ movie.rating }}</span>
+        <span class="mx-2">|</span>
+        <span>{{ movie.year }}</span>
+        <span class="mx-2">|</span>
+        <span>{{ movie.genres }}</span>
+      </div>
+      <div class="mt-12">
+        <div
+          class="flex flex-wrap justify-between items-center text-orange-400 font-semibold text-sm"
+        >
+          <div>
+            Downloaded:
+            <span class="text-gray-400 ml-2"
+              >{{ movie.download_count|intcomma }} times</span
+            >
+          </div>
+          <div>
+            Runtime: <span class="text-gray-400 ml-2">{{ movie.runtime_hours }} Hr {{movie.runtime_minutes}} Min</span>
+          </div>
+          <div>
+            Language:
+            <span class="text-gray-400 ml-2">{{ movie.language }}</span>
+          </div>
+          <div>
+            MPA:
+            <span class="text-gray-400 ml-2">{{ movie.mpa_rating }}</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-300 mt-8">
+        {% if movie.description_intro %}
+            {{movie.description_intro}}
+        {% elif movie.summary %}
+            {{movie.summary}}
+        {% else %}
+            {{movie.description_full}}
+        {% endif %}
+      </p>
+      <div class="flex flex-wrap items-center mt-6">
+      {% for torrent in movie.torrents %}
+        <a href="{{torrent.url}}" target="_blank" rel="nofollow"
+        class="flex inline-flex items-center bg-orange-500 text-gray-900 rounded font-semibold px-2 py-1
+        hover:bg-orange-600 transition ease-in-out duration-150 mr-2 mt-2"
+		title="Download {{ movie.title }} {{ torrent.quality }} {{ torrent.type }}">
+            <span class="text-sm">{{ torrent.quality }}&nbsp;{{ torrent.type|title }}</span>
+        </a>
+      {% endfor %}
+      </div>
+      <!-- <div class="mt-12">
+                <button href="#" target="_blank" class="flex inline-flex items-center bg-orange-500 text-gray-900 rounded
+                    font-semibold px-4 py-3 hover:bg-orange-600 transition ease-in-out duration-150">
+                    <svg class="w-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                    </svg>
+                    <span class="ml-2">MovieSpot Alpha</span>
+                </button>
+
+            </div> -->
+    </div>
+  </div>
+  <!-- end movie info  -->
+
+  {% endblock content %}
+</div>
