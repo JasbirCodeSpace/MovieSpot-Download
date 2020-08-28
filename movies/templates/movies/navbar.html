@@ -1,20 +1,28 @@
 {% load static %}
-      <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
-          <a class="navbar-brand" href="{% url 'movie-home' %}">
-              <img src="{% static 'movies/image/logo.png' %}" class="logo">
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="oi oi-menu"></span> Menu
-          </button>
+<nav class="border-b border-gray-800">
+  <div class="container 
+        mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-6">
+    <ul class="flex flex-col md:flex-row items-center">
+      <li class="md:ml-6 mt-3 md:mt-0">
+        <a href="{% url 'home' %}">
 
-          <div class="collapse navbar-collapse" id="ftco-nav">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item {{nav_home}}"><a href="{% url 'movie-home' %}" class="nav-link">Home</a></li>
-              <li class="nav-item {{nav_browse}}"><a href="{% url 'browse-movie' %}" class="nav-link">Browse Movies</a></li>
-              <li class="nav-item {{nav_recommend}}"><a href="{% url 'movie-recommendation' %}" class="nav-link">Recommendation</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    <!-- END nav -->
+<img class="w-32" viewBox="0 0 96 24"
+               src="{% static 'movies/image/logo-Copy.png' %}"/>
+        </a>
+      </li>
+      <li class="md:ml-16 mt-3 md:mt-0">
+        <a href="{% url 'popular-downloads' %}" class="hover:text-gray-600">Popular</a>
+      </li>
+      <li class="md:ml-6 mt-3 md:mt-0">
+        <a href="{% url 'latest-downloads' %}" class="hover:text-gray-600">Latest</a>
+      </li>
+      <li class="md:ml-6 mt-3 md:mt-0">
+        <a href="{% url 'movie-recommendation' %}" class="hover:text-gray-600">Recommendation</a>
+      </li>
+    </ul>
+    <div class="flex flex-col md:flex-row items-center">
+      {% include 'movies/search-dropdown.html' %}
+    </div>
+  </div>
+</nav>
+<!-- END nav -->
