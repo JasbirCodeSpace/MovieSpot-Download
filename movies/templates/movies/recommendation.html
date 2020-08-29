@@ -1,38 +1,155 @@
 {% extends 'movies/base.html' %}
 {% load static %}
-{% block title %} MovieSpot | Recommendation {% endblock title%}
-{% block css %}
-	{{ block.super }}
-	<link rel="stylesheet" type="text/css" href="{% static 'movies/css/movie-cards.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'movies/css/recommendation.css' %}">
-{% endblock css %}
-{% block content %}
-<section id="search-section" class="section">
-    	<div class="container">
-    		<div class="row d-flex align-items-center">
-    			<div class="col-lg-5 heading-white mb-4 mb-sm-4 mb-lg-0 ftco-animate">
-    				<h1 class="purple-heading">Which movie do you like? </h1>
-    			</div>
-    			<div class="col-lg-7 col-sm-12 col-md-12 p-5 ftco-wrap ftco-animate">
-    				<form action="" class="domain-form d-flex mb-3" id="recommendation-form" data-url="{% url 'movie-recommend' %}">
-              {% csrf_token %}
-              <div class="form-group domain-name">
-                <input name="movie-name" id="movie-name" type="text" class="form-control name px-4" placeholder="Enter your movie name..." required>
-              </div>
-              <div class="form-group domain-select d-flex">
-                <input type="submit" class="search-domain btn btn-primary text-center" value="Search">
-	            </div>
-            </form>
-    			</div>
-    		</div>
-    	</div>
-    </section>
-<section class="section" id="similar-movies-section" data-url="{% url 'movie' 'id' 'imdb_id' %}">
+{% block title %} MovieSpot | Home {% endblock title%}
 
-</section>
+{% block content %}
+
+<div class="container mx-auto px-4 pt-16">
+  <div class="recommended-movies" id="recommended-search-app">
+	<div class="flex justify-center" >
+	<div class="relative mt-3 md:mt-3">
+		<input
+			v-model="query"
+			type="text"
+			class="bg-gray-800 text-sm w-64 px-4 pl-8 py-1 focus:outline-none focus:shadow-outline"
+			placeholder="Enter a movie name"
+			@blur = "searchResultsVisible = false"
+			@focus = "searchResultsVisible = true"
+			@keydown.esc = "searchResultsVisible = false"
+			@input = "softReset"
+			v-on:keyup="keyMonitor"
+			ref="recommendSearch"
+			@keydown = "performSearch">
+				<div class="absolute top-0">
+					<svg class="fill-current w-4 text-gray-500 mt-2 ml-2" viewBox="0 0 24 24">
+						<path class="heroicon-ui"
+							d="M16.32 14.9l5.39 5.4a1 1 0 01-1.42 1.4l-5.38-5.38a8 8 0 111.41-1.41zM10 16a6 6 0 100-12 6 6 0 000 12z" />
+					</svg>
+				</div>
+
+			<div
+			v-if = "query.length > 0 && searchResultsVisible" 
+			class="z-50 absolute bg-gray-800 text-sm rounded w-64 mt-3" v-cloak>
+						<ul>
+								<li class="border-b border-gray-700"
+								v-for="(movie, index) in movies" :key="index">
+									<a
+										@mousedown.prevent = "searchResultsVisible = true && fetchMovies(movie.id)"
+										class="block hover:bg-gray-700 px-3 py-3 flex items-center">
+										<img :src="movie.small_cover_image"
+								          alt="" class="w-4">
+										<span class="ml-4">[[ movie.title ]]</span>
+									</a>
+								</li>
+								
+								<li class="border-b border-gray-700"
+								v-if="movies.length === 0 && searchResultsVisible">
+								<span class="block hover:bg-gray-700 px-3 py-3 flex items-center"> No results for [[ query ]]</span>
+								</li>
+						</ul>
+			</div>
+
+		</div>
+	</div>
+  <h2 v-if="recommendedMovies.length > 0" class="uppercase tracking-wider text-orange-500 text-lg font-semibold" v-cloak>
+      Recommended Movies
+  </h2>
+  <div v-if="recommendedMovies.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16" v-cloak>
+    <div v-for="(movie, index) in recommendedMovies" :key="index" :class="'bg-blue-100' && index == highlightedIndex">
+      <div  class="mt-8">
+        <a href="#">
+            <img :src="movie.large_cover_image" :alt="movie.title" class="hover:opacity-75 transition
+                        ease-in-out">
+        </a>
+        <div class="mt-2">
+            <a href="#"
+                class="text-lg mt-2 hover:text-gray:300">[[ movie.title ]]</a>
+            <div class="flex items-center text-gray-400 text-sm mt-1">
+                <svg class="fill-current text-orange-500 w-4" viewBox="0 0 24 24">
+                    <g data-name="Layer 2">
+                        <path
+                            d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z"
+                            data-name="star" />
+                    </g>
+                </svg>
+                <span class="ml-1">[[ movie.rating ]]%</span>
+                <span class="mx-2">|</span>
+                <span>[[ movie.year ]]</span>
+            </div>
+            <div class="text-sm text-gray-400">[[ movie.genres ]]</div>
+        </div>
+    </div>
+    </div>
+  </div>
+  <div v-if="loaderVisible">
+    <clip-loader :loading="loading" :color="spinnerColor" :size="spinnerSize" class="mt-8"></clip-loader>
+  </div>
+    </div>
+
+
+</div>
+</div>
 {% endblock content %}
 
 {% block javascript %}
-	{{block.super}}
-	<script src="{% static 'movies/js/recommendation.js' %}"></script>
-{% endblock javascript %}
+{{ block.super }}
+  <script>
+  var ClipLoader = VueSpinner.ClipLoader
+    var app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#recommended-search-app',
+      components:{
+        'ClipLoader': ClipLoader
+      },
+      data: {
+          query: '',
+          searchResultsVisible: false,
+          movies:[],
+		      recommendedMovies:[],
+          loaderVisible: false,
+          highlightedIndex:0,
+          spinnerColor:"#ed8936",
+          spinnerSize:"40px"
+      },
+      methods: {
+
+          softReset: function(){
+            this.searchResultsVisible = true
+          }, 
+          keyMonitor(e){
+            if(e.key === '/'){
+              console.log(e.keyCode)
+              this.$refs.search.focus()
+            }
+          },
+          performSearch(){
+            if(this.query.length > 2){
+            let url = "{% url 'search-movie' 'query' %}";
+            url = url.replace('query', this.query)
+            axios.get(url)
+              .then(response =>{
+                if(response.data.status === true)
+                  this.movies = JSON.parse(response.data.response)
+                  
+              })
+          }
+          },
+          fetchMovies(id){
+            let url = "{% url 'movie-recommend' 'id' %}"
+            url = url.replace('id', id)
+            this.recommendedMovies = []
+            this.loaderVisible = true
+            axios.get(url)
+              .then(response =>{
+                if(response.data.status === true){
+				          this.recommendedMovies = JSON.parse(response.data.movies)
+                }
+                this.loaderVisible = false
+                  
+              })
+          },
+
+      }
+    });
+  </script>
+{% endblock javascript%}
