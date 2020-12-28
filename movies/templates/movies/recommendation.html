@@ -57,7 +57,7 @@
   <div v-if="recommendedMovies.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16" v-cloak>
     <div v-for="(movie, index) in recommendedMovies" :key="index" :class="'bg-blue-100' && index == highlightedIndex">
       <div  class="mt-8">
-        <a href="#">
+        <a :href="urlPrepare(movie.id, movie.imdb_code)">
             <img :src="movie.large_cover_image" :alt="movie.title" class="hover:opacity-75 transition
                         ease-in-out">
         </a>
@@ -148,6 +148,11 @@
                   
               })
           },
+          urlPrepare(id, imdb_code){
+            let url = "{% url 'movie' 'id' 'imdb_code' %}"
+            url = url.replace('id', id).replace('imdb_code', imdb_code)
+            return url
+          }
 
       }
     });
