@@ -62,7 +62,7 @@ def yts_movie_details():
     print("\n\nWriting to csv completed")
     
 def write_to_csv(data, columns):
-    csv_file = 'yts_movies_details.csv'
+    csv_file = '../movies/yts_movies.csv'
     try:
         with open(csv_file, 'w', encoding='utf-8') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=columns)

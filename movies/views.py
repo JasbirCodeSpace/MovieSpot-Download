@@ -239,7 +239,6 @@ def yts_movie(movie_id,with_images='true',with_cast='true'):
 	try:
 		required_dict = {'movie_id':movie_id,'with_images':with_images,'with_cast':with_cast}
 		response = requests.get('https://yts.mx/api/v2/movie_details.json',timeout=5, params=required_dict)
-		print(response)
 		return response.json()
 	except:
 		return False

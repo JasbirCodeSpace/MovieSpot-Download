@@ -12,22 +12,23 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # TMDB KEY
-TMDB_API_KEY = os.environ['TMDB_API_KEY']
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ['DEBUG_VALUE'] == 'True')
+DEBUG = (os.getenv('DEBUG') == 'True')
 
 ALLOWED_HOSTS = ['moviespotapp.herokuapp.com']
 
