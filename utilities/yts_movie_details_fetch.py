@@ -23,8 +23,8 @@ async def fetch(session, url, idx):
 
 def prepare_urls():
 
-    yts_movies = pd.read_csv('../movies/yts_movies.csv')
-    yts_movies = yts_movies[:10000]
+    yts_movies = pd.read_csv('yts_movies.csv')
+    # yts_movies = yts_movies[:10000]
 
     for id in yts_movies['id']:
         url = f'https://yts.mx/api/v2/movie_details.json?movie_id={id}&with_images=false&with_cast=true'
