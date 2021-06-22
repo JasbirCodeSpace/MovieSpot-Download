@@ -5,7 +5,7 @@ def yts_movies():
 	# try:
 		yts_movies = []
 		required_dict = {'limit':50,'page':1,'sort_by':'download_count'}
-		response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict, verify=False)
+		response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
 		response = response.json()['data']
 		num_pages = int(response['movie_count']/response['limit'])+1
 		yts_movies = response['movies']
@@ -13,7 +13,7 @@ def yts_movies():
 		for page in range(2,num_pages+1):
 			print(page)
 			required_dict = {'limit':50,'page':page}
-			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict, verify=False)
+			response = requests.get('https://yts.mx/api/v2/list_movies.json',params=required_dict)
 			response = response.json()['data']
 			if 'movies' in response:
 				yts_movies = yts_movies + response['movies']
