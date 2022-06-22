@@ -12,7 +12,7 @@ gunicorn==20.1.0
 idna==2.10
 joblib==1.0.1
 multidict==5.1.0
-numpy==1.20.3
+numpy==1.22.0
 pandas==1.2.4
 pip-autoremove==0.9.1
 psycopg2==2.9.1
